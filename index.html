@@ -482,13 +482,7 @@
       </div>
 
       <div id="waitlist">
-        <form class="cta-form" id="waitlistForm">
-          <input type="email" name="email" placeholder="your@email.com" required>
-          <button type="submit">Join the Waitlist</button>
-        </form>
-        <div class="form-success" id="formSuccess">
-          ✅ You're on the list! We'll be in touch soon.
-        </div>
+        <iframe src="https://embeds.beehiiv.com/9f015e8c-5143-47e6-a9e1-1c48f94eb355?slim=true" data-test-id="beehiiv-embed" height="52" frameborder="0" scrolling="no" style="margin: 0 auto; border-radius: 12px; background: transparent; max-width: 480px; width: 100%;"></iframe>
         <p class="form-note">No spam. Just updates on launch.</p>
       </div>
     </div>
@@ -628,13 +622,7 @@
     <div class="container">
       <h2>Stop relying on willpower.<br>Start relying on your AI.</h2>
       <p>Join the waitlist for early access. Be first to try the assistant that actually follows through.</p>
-      <form class="cta-form" id="waitlistForm2">
-        <input type="email" name="email" placeholder="your@email.com" required>
-        <button type="submit">Join the Waitlist</button>
-      </form>
-      <div class="form-success" id="formSuccess2">
-        ✅ You're on the list! We'll be in touch soon.
-      </div>
+      <iframe src="https://embeds.beehiiv.com/9f015e8c-5143-47e6-a9e1-1c48f94eb355?slim=true" data-test-id="beehiiv-embed" height="52" frameborder="0" scrolling="no" style="margin: 0 auto; border-radius: 12px; background: transparent; max-width: 480px; width: 100%;"></iframe>
       <p class="form-note">No spam. Just updates on launch.</p>
     </div>
   </section>
@@ -647,28 +635,9 @@
   </footer>
 
   <script>
-    // Simple waitlist form handler
-    // TODO: Replace with actual backend (Beehiiv, Formspree, or custom API)
-    document.querySelectorAll('form').forEach(form => {
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const email = this.querySelector('input[type="email"]').value;
-        
-        // Store locally for now (replace with API call)
-        const waitlist = JSON.parse(localStorage.getItem('waitlist') || '[]');
-        if (!waitlist.includes(email)) {
-          waitlist.push(email);
-          localStorage.setItem('waitlist', JSON.stringify(waitlist));
-        }
-
-        // Show success
-        this.style.display = 'none';
-        this.nextElementSibling.style.display = 'block';
-
-        // TODO: Send to backend
-        console.log('Waitlist signup:', email);
-      });
-    });
+    // Beehiiv handles waitlist signups via embedded iframes
+    // Subscribers go directly to the "Executive Function Assistant" publication on Beehiiv
+    // Dashboard: https://app.beehiiv.com (publication: Executive Function Assistant)
   </script>
 
 </body>
