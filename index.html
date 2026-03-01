@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Executive Function Assistant — Your AI That Actually Follows Through</title>
+  <meta name="description" content="An AI assistant that doesn't just remind you — it calls you, and even makes calls for you. Built for ADHD, autism, and cognitive challenges.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --primary-light: #818cf8;
+      --accent: #f59e0b;
+      --bg: #0f0f1a;
+      --bg-card: #1a1a2e;
+      --bg-card-hover: #1f1f35;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --text-bright: #ffffff;
+      --border: #2d2d44;
+      --success: #22c55e;
+      --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a78bfa 100%);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Ambient glow */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Nav */
+    nav {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-bright);
+    }
+    .logo span { color: var(--primary-light); }
+    .nav-cta {
+      background: var(--gradient);
+      color: white;
+      padding: 10px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.9; }
+
+    /* Hero */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: var(--primary-light);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--text-bright);
+      margin-bottom: 24px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 640px;
+      margin: 0 auto 40px;
+    }
+
+    /* Escalation visual */
+    .escalation {
+      max-width: 500px;
+      margin: 0 auto 50px;
+      text-align: left;
+    }
+    .escalation-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 14px 0;
+      position: relative;
+    }
+    .escalation-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 48px;
+      bottom: -8px;
+      width: 2px;
+      background: var(--border);
+    }
+    .step-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .step-1 .step-icon { background: rgba(99, 102, 241, 0.2); }
+    .step-2 .step-icon { background: rgba(245, 158, 11, 0.2); }
+    .step-3 .step-icon { background: rgba(239, 68, 68, 0.2); }
+    .step-4 .step-icon { background: rgba(34, 197, 94, 0.2); }
+    .step-text strong {
+      color: var(--text-bright);
+      display: block;
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+    .step-text span {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* CTA Form */
+    .cta-form {
+      display: flex;
+      gap: 12px;
+      max-width: 480px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .cta-form input[type="email"] {
+      flex: 1;
+      min-width: 250px;
+      padding: 14px 20px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-bright);
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .cta-form input[type="email"]:focus {
+      border-color: var(--primary);
+    }
+    .cta-form input[type="email"]::placeholder {
+      color: var(--text-muted);
+    }
+    .cta-form button {
+      padding: 14px 32px;
+      border-radius: 10px;
+      border: none;
+      background: var(--gradient);
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .cta-form button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    .form-note {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin-top: 12px;
+    }
+
+    /* Problem section */
+    .section {
+      padding: 80px 0;
+    }
+    .section-label {
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.8rem;
+      color: var(--primary-light);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .section h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      color: var(--text-bright);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .section p.subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin-bottom: 48px;
+    }
+
+    /* Feature cards */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+    .feature-card:hover {
+      border-color: rgba(99, 102, 241, 0.4);
+      transform: translateY(-2px);
+    }
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+    .feature-card h3 {
+      font-size: 1.15rem;
+      color: var(--text-bright);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Who it's for */
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .audience-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 24px;
+      text-align: center;
+    }
+    .audience-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+    .audience-card h3 {
+      font-size: 1.05rem;
+      color: var(--text-bright);
+      margin-bottom: 6px;
+    }
+    .audience-card p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* Stats */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      padding: 60px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    /* Difference section */
+    .difference {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px;
+      margin-top: 48px;
+    }
+    .diff-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 32px;
+    }
+    .diff-col h3 {
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+    .diff-col.old h3 { color: #ef4444; }
+    .diff-col.new h3 { color: var(--success); }
+    .diff-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .diff-col ul li {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      padding-left: 28px;
+      position: relative;
+    }
+    .diff-col.old ul li::before {
+      content: '✗';
+      position: absolute;
+      left: 0;
+      color: #ef4444;
+      font-weight: 700;
+    }
+    .diff-col.new ul li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    /* Bottom CTA */
+    .bottom-cta {
+      text-align: center;
+      padding: 80px 0;
+    }
+    .bottom-cta h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      color: var(--text-bright);
+      margin-bottom: 16px;
+    }
+    .bottom-cta p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-bottom: 32px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    footer a {
+      color: var(--primary-light);
+      text-decoration: none;
+    }
+
+    /* Success state */
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 16px 24px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 10px;
+      color: var(--success);
+      font-weight: 500;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .hero { padding: 50px 0 40px; }
+      .diff-grid { grid-template-columns: 1fr; gap: 24px; }
+      .difference { padding: 32px 24px; }
+      .section { padding: 60px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <div class="logo">exec<span>func</span>.ai</div>
+      <a href="#waitlist" class="nav-cta">Join the Waitlist</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">🚀 Coming 2026 — Join the Waitlist</div>
+      <h1>The AI that doesn't just<br>remind you — it <em>follows through</em></h1>
+      <p>A personalized AI companion that escalates from texts to actual phone calls — and even makes calls on your behalf. Built for ADHD, autism, and cognitive challenges.</p>
+
+      <div class="escalation">
+        <div class="escalation-step step-1">
+          <div class="step-icon">💬</div>
+          <div class="step-text">
+            <strong>Gentle text reminder</strong>
+            <span>"Hey, your dentist appointment is in 2 hours"</span>
+          </div>
+        </div>
+        <div class="escalation-step step-2">
+          <div class="step-icon">🔔</div>
+          <div class="step-text">
+            <strong>No response? Firmer nudge</strong>
+            <span>"You still haven't confirmed — want me to handle it?"</span>
+          </div>
+        </div>
+        <div class="escalation-step step-3">
+          <div class="step-icon">📞</div>
+          <div class="step-text">
+            <strong>Still nothing? Your AI calls you</strong>
+            <span>An actual phone call from your AI companion</span>
+          </div>
+        </div>
+        <div class="escalation-step step-4">
+          <div class="step-icon">✅</div>
+          <div class="step-text">
+            <strong>Or — it just does it for you</strong>
+            <span>"I called the dentist and rescheduled to Thursday at 3pm"</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="waitlist">
+        <form class="cta-form" id="waitlistForm">
+          <input type="email" name="email" placeholder="your@email.com" required>
+          <button type="submit">Join the Waitlist</button>
+        </form>
+        <div class="form-success" id="formSuccess">
+          ✅ You're on the list! We'll be in touch soon.
+        </div>
+        <p class="form-note">No spam. Just updates on launch.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-number">3%</div>
+        <div class="stat-label">30-day retention for mental health apps</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">50%</div>
+        <div class="stat-label">of users never open a reminder app twice</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">42%</div>
+        <div class="stat-label">of adults over 55 will develop dementia</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Problem -->
+  <section class="section">
+    <div class="container">
+      <div class="section-label">The Problem</div>
+      <h2>Reminder apps don't work for people<br>who struggle with reminders</h2>
+      <p class="subtitle">The cruelest irony in productivity: people with executive function challenges can't consistently use the tools designed to help them. Text reminders get swiped away. Apps get forgotten. The cycle continues.</p>
+
+      <div class="difference">
+        <h2 style="text-align:center; margin-bottom: 8px;">What makes us different</h2>
+        <div class="diff-grid">
+          <div class="diff-col old">
+            <h3>Every other app</h3>
+            <ul>
+              <li>Sends a notification you swipe away</li>
+              <li>Passive — waits for you to engage</li>
+              <li>Generic reminders, no personality</li>
+              <li>Gives up after one attempt</li>
+              <li>You still have to make that dreaded phone call</li>
+              <li>Designed for neurotypical brains</li>
+            </ul>
+          </div>
+          <div class="diff-col new">
+            <h3>Executive Function Assistant</h3>
+            <ul>
+              <li>Escalates until the task gets done</li>
+              <li>Proactive — reaches out to you</li>
+              <li>Personalized AI that knows you</li>
+              <li>Text → Push → Phone call → Caregiver alert</li>
+              <li>Makes calls FOR you (appointments, insurance, refills)</li>
+              <li>Built for ADHD, autism, and cognitive challenges</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="section-label">Features</div>
+      <h2>Everything you wish reminders could do</h2>
+      <p class="subtitle">A complete executive function support system — not just another to-do list.</p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🧠</div>
+          <h3>Personified AI Companion</h3>
+          <p>Not a faceless app. A named AI with personality, memory, and understanding of your patterns. Research shows personified reminders improve task completion by 14+ points.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📞</div>
+          <h3>Escalating Interventions</h3>
+          <p>Gentle text → firmer nudge → actual phone call → caregiver alert. Each level configurable per task. Because sometimes you need more than a notification.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🤙</div>
+          <h3>"Do It For Me" Calls</h3>
+          <p>Your AI calls businesses on your behalf — scheduling appointments, navigating phone trees, refilling prescriptions, following up on tasks you've been avoiding.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>Builds Independence</h3>
+          <p>Not a crutch — a scaffold. Tracks which tasks you complete independently and gradually reduces support. The goal is needing us less, not more.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👨‍👩‍👧‍👦</div>
+          <h3>Caregiver Dashboard</h3>
+          <p>Families see task completion, mood patterns, and cognitive trends in real-time. Peace of mind for parents of teens with ADHD or children of aging parents.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎙️</div>
+          <h3>Voice-First Design</h3>
+          <p>"Hey, remind me to call the dentist" — capture tasks the moment you think of them. No opening an app, finding the right screen, or typing it out.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who it's for -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="section-label">Who It's For</div>
+      <h2>Built for brains that work differently</h2>
+      <p class="subtitle">One platform, multiple needs — because executive function challenges don't discriminate.</p>
+
+      <div class="audience-grid">
+        <div class="audience-card">
+          <div class="audience-icon">⚡</div>
+          <h3>ADHD</h3>
+          <p>Task paralysis, time blindness, avoidance — finally an assistant that escalates when you can't initiate.</p>
+        </div>
+        <div class="audience-card">
+          <div class="audience-icon">🧩</div>
+          <h3>Autism</h3>
+          <p>Routine support, communication assistance, and predictable structure — with sensory-friendly design.</p>
+        </div>
+        <div class="audience-card">
+          <div class="audience-icon">💜</div>
+          <h3>Early Dementia</h3>
+          <p>Medication reminders, safety check-ins, and cognitive tracking — with caregiver alerts when needed.</p>
+        </div>
+        <div class="audience-card">
+          <div class="audience-icon">🤝</div>
+          <h3>Caregivers</h3>
+          <p>Real-time visibility into your loved one's daily tasks and wellbeing — without being the constant reminder.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bottom CTA -->
+  <section class="bottom-cta">
+    <div class="container">
+      <h2>Stop relying on willpower.<br>Start relying on your AI.</h2>
+      <p>Join the waitlist for early access. Be first to try the assistant that actually follows through.</p>
+      <form class="cta-form" id="waitlistForm2">
+        <input type="email" name="email" placeholder="your@email.com" required>
+        <button type="submit">Join the Waitlist</button>
+      </form>
+      <div class="form-success" id="formSuccess2">
+        ✅ You're on the list! We'll be in touch soon.
+      </div>
+      <p class="form-note">No spam. Just updates on launch.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Executive Function Assistant · <a href="mailto:hello@execfunc.ai">hello@execfunc.ai</a></p>
+      <p style="margin-top:8px;">Built with ❤️ for brains that work differently</p>
+    </div>
+  </footer>
+
+  <script>
+    // Simple waitlist form handler
+    // TODO: Replace with actual backend (Beehiiv, Formspree, or custom API)
+    document.querySelectorAll('form').forEach(form => {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = this.querySelector('input[type="email"]').value;
+        
+        // Store locally for now (replace with API call)
+        const waitlist = JSON.parse(localStorage.getItem('waitlist') || '[]');
+        if (!waitlist.includes(email)) {
+          waitlist.push(email);
+          localStorage.setItem('waitlist', JSON.stringify(waitlist));
+        }
+
+        // Show success
+        this.style.display = 'none';
+        this.nextElementSibling.style.display = 'block';
+
+        // TODO: Send to backend
+        console.log('Waitlist signup:', email);
+      });
+    });
+  </script>
+
+</body>
+</html>
