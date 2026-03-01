@@ -214,6 +214,11 @@
       opacity: 0.9;
       transform: translateY(-1px);
     }
+    .beehiiv-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 0 auto;
+    }
     .form-note {
       text-align: center;
       color: var(--text-muted);
@@ -481,8 +486,8 @@
         </div>
       </div>
 
-      <div id="waitlist">
-        <iframe src="https://embeds.beehiiv.com/9f015e8c-5143-47e6-a9e1-1c48f94eb355?slim=true" data-test-id="beehiiv-embed" height="52" frameborder="0" scrolling="no" style="margin: 0 auto; border-radius: 12px; background: transparent; max-width: 480px; width: 100%;"></iframe>
+      <div id="waitlist" class="beehiiv-wrapper">
+        <iframe src="https://embeds.beehiiv.com/9f015e8c-5143-47e6-a9e1-1c48f94eb355?slim=true" data-test-id="beehiiv-embed" height="52" frameborder="0" scrolling="no" style="width:100%; max-width:480px; border-radius:12px; background:transparent;"></iframe>
         <p class="form-note">No spam. Just updates on launch.</p>
       </div>
     </div>
@@ -622,7 +627,9 @@
     <div class="container">
       <h2>Stop relying on willpower.<br>Start relying on your AI.</h2>
       <p>Join the waitlist for early access. Be first to try the assistant that actually follows through.</p>
-      <iframe src="https://embeds.beehiiv.com/9f015e8c-5143-47e6-a9e1-1c48f94eb355?slim=true" data-test-id="beehiiv-embed" height="52" frameborder="0" scrolling="no" style="margin: 0 auto; border-radius: 12px; background: transparent; max-width: 480px; width: 100%;"></iframe>
+      <div class="beehiiv-wrapper">
+        <iframe src="https://embeds.beehiiv.com/9f015e8c-5143-47e6-a9e1-1c48f94eb355?slim=true" data-test-id="beehiiv-embed" height="52" frameborder="0" scrolling="no" style="width:100%; max-width:480px; border-radius:12px; background:transparent;"></iframe>
+      </div>
       <p class="form-note">No spam. Just updates on launch.</p>
     </div>
   </section>
@@ -635,9 +642,9 @@
   </footer>
 
   <script>
-    // Beehiiv handles waitlist signups via embedded iframes
-    // Subscribers go directly to the "Executive Function Assistant" publication on Beehiiv
-    // Dashboard: https://app.beehiiv.com (publication: Executive Function Assistant)
+    // Beehiiv handles subscriptions via embedded iframes
+    // Publication: Executive Function Assistant (pub_9f015e8c-5143-47e6-a9e1-1c48f94eb355)
+    // Dashboard: https://app.beehiiv.com → Executive Function Assistant → Subscribers
   </script>
 
 </body>
