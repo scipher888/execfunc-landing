@@ -486,8 +486,14 @@
         </div>
       </div>
 
-      <div id="waitlist" class="beehiiv-wrapper">
-        <iframe src="https://subscribe-forms.beehiiv.com/2680f244-cc36-4ae9-af91-f81c2253f7d0" data-test-id="beehiiv-embed" height="320" frameborder="0" scrolling="no" style="width:100%; max-width:480px; border-radius:12px; background:transparent;"></iframe>
+      <div id="waitlist">
+        <form class="cta-form" id="waitlistForm">
+          <input type="email" name="email" placeholder="your@email.com" required>
+          <button type="submit">Join the Waitlist</button>
+        </form>
+        <div class="form-success" id="formSuccess" style="display:none;">
+          ✅ You're on the list! We'll be in touch soon.
+        </div>
         <p class="form-note">No spam. Just updates on launch.</p>
       </div>
     </div>
@@ -627,8 +633,12 @@
     <div class="container">
       <h2>Stop relying on willpower.<br>Start relying on your AI.</h2>
       <p>Join the waitlist for early access. Be first to try the assistant that actually follows through.</p>
-      <div class="beehiiv-wrapper">
-        <iframe src="https://subscribe-forms.beehiiv.com/2680f244-cc36-4ae9-af91-f81c2253f7d0" data-test-id="beehiiv-embed" height="320" frameborder="0" scrolling="no" style="width:100%; max-width:480px; border-radius:12px; background:transparent;"></iframe>
+      <form class="cta-form" id="waitlistForm2">
+        <input type="email" name="email" placeholder="your@email.com" required>
+        <button type="submit">Join the Waitlist</button>
+      </form>
+      <div class="form-success" id="formSuccess2" style="display:none;">
+        ✅ You're on the list! We'll be in touch soon.
       </div>
       <p class="form-note">No spam. Just updates on launch.</p>
     </div>
@@ -642,9 +652,47 @@
   </footer>
 
   <script>
-    // Beehiiv handles subscriptions via embedded iframes
-    // Publication: Executive Function Assistant (pub_9f015e8c-5143-47e6-a9e1-1c48f94eb355)
-    // Dashboard: https://app.beehiiv.com → Executive Function Assistant → Subscribers
+    // Waitlist signups via Formsubmit.co → scipher800@gmail.com
+    // Emails also stored in localStorage as backup
+    // Import to Beehiiv (Executive Function Assistant pub) when ready
+    const FORM_ENDPOINT = 'https://formsubmit.co/ajax/scipher800@gmail.com';
+
+    document.querySelectorAll('.cta-form').forEach(form => {
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const email = this.querySelector('input[type="email"]').value;
+        const btn = this.querySelector('button');
+        const origText = btn.textContent;
+        btn.textContent = 'Joining...';
+        btn.disabled = true;
+
+        // Backup to localStorage
+        const waitlist = JSON.parse(localStorage.getItem('ef_waitlist') || '[]');
+        if (!waitlist.includes(email)) {
+          waitlist.push(email);
+          localStorage.setItem('ef_waitlist', JSON.stringify(waitlist));
+        }
+
+        try {
+          await fetch(FORM_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+              email: email,
+              _subject: 'EF Assistant Waitlist Signup',
+              _template: 'table',
+              _captcha: 'false'
+            })
+          });
+        } catch(err) {
+          // Silent fail — localStorage backup still works
+        }
+
+        // Show success
+        this.style.display = 'none';
+        this.nextElementSibling.style.display = 'block';
+      });
+    });
   </script>
 
 </body>
