@@ -1,1498 +1,861 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Synthia — 4 Simple Pieces</title>
-  <meta name="description" content="A simple, mobile-friendly explainer for Synthia's 4 pipeline components." />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Synthia — Sovereign Search</title>
+  <meta name="description" content="How Synthia's Sovereign Search works in 5 simple pieces.">
   <style>
     :root {
-      --bg: #090b10;
-      --bg-2: #0d1017;
-      --panel: rgba(17, 22, 32, 0.84);
-      --panel-strong: rgba(21, 27, 39, 0.94);
-      --line: rgba(255, 255, 255, 0.09);
-      --line-strong: rgba(255, 255, 255, 0.16);
-      --text: #f7f8fb;
-      --muted: #a5afc2;
-      --soft: #cdd4e3;
-      --shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
-      --radius-xl: 28px;
-      --radius-lg: 22px;
-      --radius-md: 18px;
-      --radius-sm: 14px;
-      --max: #8f79ff;
-      --council: #4ea5ff;
-      --compute: #36d6a3;
-      --modes: #ffb25d;
-      --focus: rgba(143, 121, 255, 0.34);
+      color-scheme: light;
     }
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
-      min-height: 100vh;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 18% 8%, rgba(143, 121, 255, 0.16), transparent 32%),
-        radial-gradient(circle at 84% 14%, rgba(78, 165, 255, 0.14), transparent 28%),
-        radial-gradient(circle at 50% 100%, rgba(54, 214, 163, 0.09), transparent 36%),
-        linear-gradient(180deg, #07090d 0%, #0a0d13 45%, #090b10 100%);
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-    }
-
-    body::before,
-    body::after {
-      content: "";
-      position: fixed;
-      inset: auto;
-      pointer-events: none;
-      z-index: 0;
-      filter: blur(70px);
-      opacity: 0.65;
-    }
-
-    body::before {
-      width: 180px;
-      height: 180px;
-      top: 12%;
-      left: -30px;
-      background: rgba(143, 121, 255, 0.18);
-      animation: driftA 18s ease-in-out infinite;
-    }
-
-    body::after {
-      width: 220px;
-      height: 220px;
-      right: -60px;
-      bottom: 12%;
-      background: rgba(54, 214, 163, 0.14);
-      animation: driftB 20s ease-in-out infinite;
-    }
-
-    @keyframes driftA {
-      0%, 100% { transform: translate3d(0, 0, 0); }
-      50% { transform: translate3d(22px, -20px, 0); }
-    }
-
-    @keyframes driftB {
-      0%, 100% { transform: translate3d(0, 0, 0); }
-      50% { transform: translate3d(-20px, 18px, 0); }
-    }
-
-    .page {
-      position: relative;
-      z-index: 1;
-      width: min(100%, 820px);
-      margin: 0 auto;
-      padding: calc(22px + env(safe-area-inset-top, 0px)) 16px calc(44px + env(safe-area-inset-bottom, 0px));
-    }
-
-    .hero {
-      position: relative;
-      overflow: hidden;
-      padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: 32px;
-      background: linear-gradient(180deg, rgba(18, 24, 34, 0.9), rgba(11, 14, 21, 0.94));
-      box-shadow: var(--shadow);
-      isolation: isolate;
-      animation: riseIn 700ms cubic-bezier(.2,.8,.2,1) both;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: -1px;
-      border-radius: inherit;
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.03) 28%, transparent 55%),
-        linear-gradient(90deg, rgba(143,121,255,0.18), rgba(78,165,255,0.10), rgba(54,214,163,0.10));
-      opacity: 0.7;
-      z-index: -2;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: 1px;
-      border-radius: inherit;
-      background: linear-gradient(180deg, rgba(14,18,27,0.92), rgba(10,13,19,0.96));
-      z-index: -1;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--soft);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-weight: 700;
-      margin-bottom: 16px;
-      backdrop-filter: blur(12px);
-    }
-
-    .brand-mark {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: conic-gradient(from 140deg, var(--max), var(--council), var(--compute), var(--modes), var(--max));
-      box-shadow: 0 0 18px rgba(143, 121, 255, 0.35);
-      flex: 0 0 auto;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(30px, 7vw, 52px);
-      line-height: 1.02;
-      letter-spacing: -0.04em;
-      max-width: 10.5ch;
-    }
-
-    .hero p {
-      margin: 14px 0 0;
-      font-size: clamp(16px, 3.8vw, 19px);
-      line-height: 1.55;
-      color: var(--soft);
-      max-width: 35ch;
-    }
-
-    .hero-strap {
-      margin-top: 18px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .mini-flow {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .mini-step {
-      position: relative;
-      min-height: 88px;
-      padding: 14px 14px 15px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-      overflow: hidden;
-    }
-
-    .mini-step::before {
-      content: "";
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: 4px;
-      border-radius: 99px;
-      background: var(--accent, rgba(255,255,255,0.2));
-    }
-
-    .mini-step span {
-      display: block;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      margin-bottom: 8px;
-      font-weight: 700;
-    }
-
-    .mini-step strong {
-      display: block;
-      font-size: 15px;
-      line-height: 1.35;
-      color: var(--text);
-      letter-spacing: -0.01em;
-    }
-
-    .intro-note {
-      margin: 18px 2px 0;
-      color: var(--muted);
-      font-size: 14px;
+      background: #f6f8fc;
+      color: #101828;
       line-height: 1.5;
     }
 
-    .section-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin: 26px 2px 14px;
+    .synthia-sovereign {
+      --ss-bg: #f6f8fc;
+      --ss-surface: #ffffff;
+      --ss-surface-soft: #f7f9ff;
+      --ss-line: #e4e7ec;
+      --ss-text: #101828;
+      --ss-muted: #475467;
+      --ss-accent: #4f46e5;
+      --ss-accent-soft: #eef2ff;
+      --ss-radius: 22px;
+      --ss-shadow: 0 16px 44px rgba(16, 24, 40, 0.06);
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(79, 70, 229, 0.10), transparent 28%),
+        radial-gradient(circle at top right, rgba(14, 165, 233, 0.08), transparent 26%),
+        var(--ss-bg);
     }
 
-    .section-head h2 {
-      margin: 0;
-      font-size: clamp(20px, 5vw, 28px);
-      letter-spacing: -0.03em;
-    }
-
-    .section-head p {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .ghost-row {
-      display: inline-flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .ghost-btn {
-      appearance: none;
-      border: 1px solid rgba(255,255,255,0.09);
-      background: rgba(255,255,255,0.04);
-      color: var(--soft);
-      border-radius: 999px;
-      padding: 10px 12px;
-      font: inherit;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-    }
-
-    .ghost-btn:hover,
-    .ghost-btn:focus-visible {
-      transform: translateY(-1px);
-      background: rgba(255,255,255,0.06);
-      border-color: rgba(255,255,255,0.16);
-      outline: none;
-    }
-
-    .accordion {
-      display: grid;
-      gap: 12px;
-    }
-
-    .card {
-      position: relative;
-      border-radius: 24px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(17, 22, 32, 0.9), rgba(11, 15, 22, 0.95));
-      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
-      transform: translateY(0);
-      transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
-      animation: riseIn 720ms cubic-bezier(.2,.8,.2,1) both;
-      animation-delay: var(--delay, 0ms);
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, var(--accent-soft), transparent 40%);
-      opacity: 0.8;
-      pointer-events: none;
-    }
-
-    .card::after {
-      content: "";
-      position: absolute;
-      inset: 0 auto auto 0;
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, var(--accent), rgba(255,255,255,0));
-      opacity: 0.55;
-      pointer-events: none;
-    }
-
-    .card:hover {
-      border-color: rgba(255,255,255,0.15);
-      transform: translateY(-2px);
-      box-shadow: 0 24px 54px rgba(0, 0, 0, 0.3);
-    }
-
-    .card.open {
-      border-color: color-mix(in srgb, var(--accent) 35%, rgba(255,255,255,0.1));
-      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.36), 0 0 0 1px rgba(255,255,255,0.03) inset;
-    }
-
-    .card-btn {
-      width: 100%;
-      text-align: left;
-      background: transparent;
+    .synthia-sovereign a {
       color: inherit;
-      border: 0;
-      padding: 18px;
-      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .synthia-sovereign .ss-wrap {
+      width: min(1120px, calc(100% - 2rem));
+      margin-inline: auto;
+    }
+
+    .synthia-sovereign .ss-section {
+      padding: clamp(3.25rem, 8vw, 6rem) 0;
+    }
+
+    .synthia-sovereign .ss-section + .ss-section {
+      padding-top: 0;
+    }
+
+    .synthia-sovereign .ss-eyebrow,
+    .synthia-sovereign .ss-kicker {
+      margin: 0 0 0.85rem;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ss-accent);
+    }
+
+    .synthia-sovereign h1,
+    .synthia-sovereign h2,
+    .synthia-sovereign h3,
+    .synthia-sovereign p {
+      margin-top: 0;
+    }
+
+    .synthia-sovereign h1 {
+      margin-bottom: 1rem;
+      font-size: clamp(2.25rem, 5vw, 4.1rem);
+      line-height: 1.03;
+      letter-spacing: -0.035em;
+      max-width: 12ch;
+    }
+
+    .synthia-sovereign h2 {
+      margin-bottom: 0.65rem;
+      font-size: clamp(1.6rem, 3vw, 2.3rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .synthia-sovereign .ss-hero-copy {
+      max-width: 64ch;
+      font-size: clamp(1rem, 1.6vw, 1.16rem);
+      color: var(--ss-muted);
+      margin-bottom: 1.6rem;
+    }
+
+    .synthia-sovereign .ss-core-note {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem 1rem;
+      align-items: center;
+      padding: 1rem 1.1rem;
+      margin-bottom: 2rem;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(228, 231, 236, 0.95);
+      border-radius: 18px;
+      backdrop-filter: blur(8px);
+      box-shadow: var(--ss-shadow);
+    }
+
+    .synthia-sovereign .ss-core-note strong {
+      font-size: 0.98rem;
+    }
+
+    .synthia-sovereign .ss-core-note span {
+      color: var(--ss-muted);
+      font-size: 0.98rem;
+    }
+
+    .synthia-sovereign code,
+    .synthia-sovereign .ss-code {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5rem 0.8rem;
+      border-radius: 999px;
+      background: #111827;
+      color: #ffffff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.93rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .synthia-sovereign .ss-quick-scan {
       display: grid;
-      gap: 14px;
-      position: relative;
-      z-index: 1;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .synthia-sovereign .ss-scan-card {
+      display: block;
+      height: 100%;
+      padding: 1.15rem;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(228, 231, 236, 0.96);
+      border-radius: 20px;
+      box-shadow: var(--ss-shadow);
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .synthia-sovereign .ss-scan-card:hover,
+    .synthia-sovereign .ss-scan-card:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(79, 70, 229, 0.35);
+      box-shadow: 0 18px 48px rgba(16, 24, 40, 0.1);
       outline: none;
     }
 
-    .card-btn:focus-visible {
-      box-shadow: 0 0 0 3px var(--focus) inset;
-      border-radius: 22px;
-    }
-
-    .card-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 14px;
-    }
-
-    .card-main {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 14px;
-      min-width: 0;
-      align-items: start;
-    }
-
-    .icon-wrap {
-      width: 44px;
-      height: 44px;
-      border-radius: 16px;
-      display: grid;
-      place-items: center;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
-      flex: 0 0 auto;
-    }
-
-    .icon-wrap svg {
-      width: 22px;
-      height: 22px;
-      stroke: var(--accent);
-      fill: none;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .card-eyebrow {
+    .synthia-sovereign .ss-scan-number {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-
-    .card h3 {
-      margin: 0;
-      font-size: clamp(20px, 5vw, 28px);
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-    }
-
-    .summary {
-      margin: 8px 0 0;
-      color: var(--soft);
-      font-size: 15px;
-      line-height: 1.5;
-      max-width: 34ch;
-    }
-
-    .aside {
-      display: grid;
-      justify-items: end;
-      gap: 10px;
-      flex: 0 0 auto;
-    }
-
-    .say {
-      display: inline-grid;
-      gap: 6px;
-      min-width: 0;
-      justify-items: end;
-    }
-
-    .say-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      color: var(--muted);
-      font-weight: 800;
-    }
-
-    .say-pill {
-      max-width: min(100%, 230px);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 11px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.09);
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 12.5px;
-      line-height: 1.35;
-      white-space: normal;
-      text-wrap: balance;
-    }
-
-    .chev {
-      width: 32px;
-      height: 32px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      transition: transform 220ms ease, background 220ms ease;
-    }
-
-    .chev svg {
-      width: 16px;
-      height: 16px;
-      stroke: var(--soft);
-      transition: transform 220ms ease;
-    }
-
-    .card.open .chev {
-      background: rgba(255,255,255,0.08);
-    }
-
-    .card.open .chev svg {
-      transform: rotate(180deg);
-    }
-
-    .card-body {
-      height: 0;
-      overflow: hidden;
-      transition: height 340ms cubic-bezier(.2,.8,.2,1);
-      position: relative;
-      z-index: 1;
-    }
-
-    .card-inner {
-      padding: 0 18px 18px;
-      display: grid;
-      gap: 14px;
-    }
-
-    .body-grid {
-      display: grid;
-      gap: 12px;
-    }
-
-    .info {
-      padding: 16px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-    }
-
-    .info-label {
-      margin: 0 0 8px;
-      font-size: 11px;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-      color: var(--muted);
-      font-weight: 800;
-    }
-
-    .info p {
-      margin: 0;
-      color: var(--soft);
-      line-height: 1.6;
-      font-size: 14.5px;
-    }
-
-    .micro-flow {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .micro-flow.four {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .micro-pill {
-      min-height: 72px;
-      padding: 12px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.06);
-      display: flex;
-      flex-direction: column;
       justify-content: center;
-      gap: 6px;
-      position: relative;
-    }
-
-    .micro-pill::after {
-      content: "→";
-      position: absolute;
-      right: -10px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: rgba(255,255,255,0.26);
-      font-size: 20px;
-    }
-
-    .micro-pill:last-child::after {
-      display: none;
-    }
-
-    .micro-pill span {
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      width: 2rem;
+      height: 2rem;
+      margin-bottom: 0.9rem;
+      border-radius: 999px;
+      background: var(--ss-accent-soft);
+      color: var(--ss-accent);
       font-weight: 800;
-      color: var(--muted);
+      font-size: 0.9rem;
     }
 
-    .micro-pill strong {
-      font-size: 14px;
-      line-height: 1.35;
-      letter-spacing: -0.01em;
-    }
-
-    .example-questions,
-    .mode-grid,
-    .mode-example {
-      padding: 16px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-    }
-
-    .question-list {
-      display: grid;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .question-chip {
-      padding: 10px 12px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.06);
-      color: var(--soft);
-      font-size: 14px;
-      line-height: 1.45;
-    }
-
-    .mode-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .mode-card {
-      padding: 14px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .mode-card strong {
-      display: block;
-      font-size: 15px;
-      margin-bottom: 6px;
+    .synthia-sovereign .ss-scan-card h3 {
+      margin-bottom: 0.3rem;
+      font-size: 1.08rem;
+      line-height: 1.15;
       letter-spacing: -0.02em;
     }
 
-    .mode-card p {
+    .synthia-sovereign .ss-scan-card p {
       margin: 0;
-      font-size: 14px;
-      line-height: 1.5;
-      color: var(--soft);
+      color: var(--ss-muted);
+      font-size: 0.95rem;
+      line-height: 1.45;
     }
 
-    .tabs {
+    .synthia-sovereign .ss-section-head {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
+      justify-content: space-between;
+      align-items: end;
+      gap: 1rem 2rem;
+      margin-bottom: 1.4rem;
     }
 
-    .tab-btn,
-    .toggle,
-    .preset,
-    .mode-toggle,
-    .copy-btn {
+    .synthia-sovereign .ss-section-head p {
+      margin-bottom: 0;
+      max-width: 60ch;
+      color: var(--ss-muted);
+    }
+
+    .synthia-sovereign .ss-controls {
+      display: flex;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+
+    .synthia-sovereign .ss-button {
       appearance: none;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      color: var(--soft);
+      border: 1px solid var(--ss-line);
+      background: rgba(255, 255, 255, 0.86);
+      color: var(--ss-text);
       border-radius: 999px;
-      padding: 11px 13px;
+      padding: 0.72rem 1rem;
       font: inherit;
-      font-size: 14px;
-      line-height: 1;
       font-weight: 700;
       cursor: pointer;
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+      transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+      box-shadow: var(--ss-shadow);
     }
 
-    .tab-btn.active,
-    .toggle.active,
-    .preset.active,
-    .mode-toggle.active {
-      color: var(--text);
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.16);
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.03) inset;
-    }
-
-    .tab-btn:hover,
-    .tab-btn:focus-visible,
-    .toggle:hover,
-    .toggle:focus-visible,
-    .preset:hover,
-    .preset:focus-visible,
-    .mode-toggle:hover,
-    .mode-toggle:focus-visible,
-    .copy-btn:hover,
-    .copy-btn:focus-visible {
+    .synthia-sovereign .ss-button:hover,
+    .synthia-sovereign .ss-button:focus-visible {
+      border-color: rgba(79, 70, 229, 0.35);
+      background: #ffffff;
       transform: translateY(-1px);
-      border-color: rgba(255,255,255,0.16);
       outline: none;
     }
 
-    .mode-output {
-      margin-top: 0;
-      font-size: 15px;
-      line-height: 1.65;
-      color: var(--soft);
-      min-height: 74px;
-    }
-
-    .combo-section {
-      margin-top: 16px;
-      padding: 18px;
-      border-radius: 28px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: linear-gradient(180deg, rgba(17, 22, 32, 0.9), rgba(11, 15, 22, 0.95));
-      box-shadow: var(--shadow);
-      animation: riseIn 720ms cubic-bezier(.2,.8,.2,1) both;
-      animation-delay: 160ms;
-    }
-
-    .combo-head h2 {
-      margin: 0;
-      font-size: clamp(22px, 5.6vw, 32px);
-      letter-spacing: -0.03em;
-    }
-
-    .combo-head p {
-      margin: 10px 0 0;
-      color: var(--soft);
-      line-height: 1.55;
-      font-size: 15px;
-      max-width: 44ch;
-    }
-
-    .presets,
-    .toggles,
-    .mode-toggles {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    .builder-panel {
-      margin-top: 16px;
-      padding: 16px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
+    .synthia-sovereign .ss-card-grid,
+    .synthia-sovereign .ss-command-grid {
       display: grid;
-      gap: 12px;
+      gap: 1rem;
     }
 
-    .builder-label {
-      margin: 0;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      color: var(--muted);
+    .synthia-sovereign .ss-card-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .synthia-sovereign .ss-command-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .synthia-sovereign .ss-card,
+    .synthia-sovereign .ss-command-card {
+      background: var(--ss-surface);
+      border: 1px solid var(--ss-line);
+      border-radius: var(--ss-radius);
+      box-shadow: var(--ss-shadow);
+      overflow: hidden;
+    }
+
+    .synthia-sovereign .ss-card summary {
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 1rem;
+      padding: 1.3rem;
+      cursor: pointer;
+    }
+
+    .synthia-sovereign .ss-card summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .synthia-sovereign .ss-card summary::after {
+      content: "+";
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 2.25rem;
+      min-height: 2.25rem;
+      border-radius: 999px;
+      border: 1px solid var(--ss-line);
+      color: var(--ss-accent);
+      font-size: 1.35rem;
+      font-weight: 500;
+      line-height: 1;
+      background: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .synthia-sovereign .ss-card[open] summary::after {
+      content: "−";
+    }
+
+    .synthia-sovereign .ss-card summary:focus-visible {
+      outline: 3px solid rgba(79, 70, 229, 0.18);
+      outline-offset: -3px;
+    }
+
+    .synthia-sovereign .ss-summary-main {
+      display: flex;
+      gap: 1rem;
+      align-items: start;
+      min-width: 0;
+    }
+
+    .synthia-sovereign .ss-step {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 16px;
+      background: var(--ss-accent-soft);
+      color: var(--ss-accent);
+      font-size: 0.95rem;
       font-weight: 800;
+      flex-shrink: 0;
     }
 
-    .phrase-wrap {
+    .synthia-sovereign .ss-card-label {
+      margin: 0 0 0.28rem;
+      color: var(--ss-accent);
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .synthia-sovereign .ss-card summary h3 {
+      margin: 0 0 0.35rem;
+      font-size: 1.32rem;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .synthia-sovereign .ss-card-blurb {
+      margin: 0;
+      color: var(--ss-muted);
+      max-width: 46ch;
+    }
+
+    .synthia-sovereign .ss-card-body,
+    .synthia-sovereign .ss-command-body {
+      padding: 1.3rem;
+      border-top: 1px solid var(--ss-line);
+    }
+
+    .synthia-sovereign .ss-mini-grid {
       display: grid;
-      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem;
     }
 
-    .phrase-card {
-      padding: 14px;
+    .synthia-sovereign .ss-mini,
+    .synthia-sovereign .ss-command-mini {
+      padding: 1rem;
+      background: var(--ss-surface-soft);
+      border: 1px solid #e7eaf5;
       border-radius: 18px;
-      background: linear-gradient(135deg, rgba(143,121,255,0.12), rgba(78,165,255,0.06) 45%, rgba(54,214,163,0.08));
-      border: 1px solid rgba(255,255,255,0.08);
-      overflow-wrap: anywhere;
     }
 
-    .phrase-card code {
+    .synthia-sovereign .ss-mini--wide {
+      grid-column: 1 / -1;
+    }
+
+    .synthia-sovereign .ss-mini-label {
+      margin: 0 0 0.45rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ss-muted);
+    }
+
+    .synthia-sovereign .ss-mini p,
+    .synthia-sovereign .ss-command-mini p {
+      margin: 0;
+      font-size: 0.98rem;
+    }
+
+    .synthia-sovereign .ss-mode-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .synthia-sovereign .ss-mode-item {
+      padding: 0.9rem;
+      background: #ffffff;
+      border: 1px solid var(--ss-line);
+      border-radius: 16px;
+    }
+
+    .synthia-sovereign .ss-mode-item strong {
       display: block;
-      white-space: pre-wrap;
-      color: var(--text);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 14px;
-      line-height: 1.65;
+      margin-bottom: 0.18rem;
+      font-size: 0.98rem;
     }
 
-    .phrase-actions {
+    .synthia-sovereign .ss-mode-item span {
+      color: var(--ss-muted);
+      font-size: 0.94rem;
+    }
+
+    .synthia-sovereign .ss-command-card {
       display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      min-height: 100%;
     }
 
-    .copy-btn {
-      color: var(--text);
+    .synthia-sovereign .ss-command-top {
+      padding: 1.3rem 1.3rem 0;
     }
 
-    .copy-btn.done {
-      border-color: rgba(54,214,163,0.3);
-      background: rgba(54,214,163,0.14);
+    .synthia-sovereign .ss-command-tag {
+      display: inline-block;
+      margin-bottom: 0.65rem;
+      padding: 0.38rem 0.65rem;
+      border-radius: 999px;
+      background: var(--ss-accent-soft);
+      color: var(--ss-accent);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
 
-    .plain-english {
-      margin: 0;
-      color: var(--soft);
-      line-height: 1.65;
-      font-size: 15px;
+    .synthia-sovereign .ss-command-card h3 {
+      margin: 0 0 0.3rem;
+      font-size: 1.45rem;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
     }
 
-    .mini-examples {
-      display: grid;
-      gap: 10px;
-      margin-top: 14px;
+    .synthia-sovereign .ss-command-card > p,
+    .synthia-sovereign .ss-command-top p {
+      margin-bottom: 0;
+      color: var(--ss-muted);
+      max-width: 42ch;
     }
 
-    .example-card {
-      padding: 14px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.07);
-      background: rgba(255,255,255,0.04);
+    .synthia-sovereign .ss-footer-note {
+      margin-top: 1rem;
+      color: var(--ss-muted);
+      font-size: 0.97rem;
     }
 
-    .example-card code {
-      display: block;
-      color: var(--text);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 13.5px;
-      line-height: 1.5;
-      margin-bottom: 8px;
-      overflow-wrap: anywhere;
+    .synthia-sovereign .ss-subtle {
+      color: var(--ss-muted);
     }
 
-    .example-card p {
-      margin: 0;
-      color: var(--soft);
-      line-height: 1.55;
-      font-size: 14px;
-    }
-
-    footer {
-      margin-top: 18px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-      padding: 8px 8px 2px;
-    }
-
-    @keyframes riseIn {
-      from {
-        opacity: 0;
-        transform: translateY(16px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (min-width: 720px) {
-      .page {
-        padding-left: 22px;
-        padding-right: 22px;
+    @media (max-width: 980px) {
+      .synthia-sovereign .ss-quick-scan {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .hero {
-        padding: 28px;
-      }
-
-      .mini-flow {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-
-      .body-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .card-btn {
-        padding: 22px;
-      }
-
-      .card-inner {
-        padding: 0 22px 22px;
-      }
-
-      .combo-section {
-        padding: 24px;
-      }
-
-      .mini-examples {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 640px) {
-      .card-top {
-        display: grid;
-        gap: 14px;
-      }
-
-      .aside {
-        justify-items: start;
-      }
-
-      .say {
-        justify-items: start;
-      }
-
-      .micro-flow,
-      .micro-flow.four {
+      .synthia-sovereign .ss-card-grid,
+      .synthia-sovereign .ss-command-grid {
         grid-template-columns: 1fr;
       }
 
-      .micro-pill::after {
-        content: "↓";
-        right: auto;
-        left: 50%;
-        top: auto;
-        bottom: -18px;
-        transform: translateX(-50%);
+      .synthia-sovereign .ss-section-head {
+        align-items: start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .synthia-sovereign .ss-mini-grid,
+      .synthia-sovereign .ss-mode-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .synthia-sovereign .ss-wrap {
+        width: min(1120px, calc(100% - 1rem));
       }
 
-      .micro-pill:last-child::after {
-        display: none;
+      .synthia-sovereign .ss-quick-scan {
+        grid-template-columns: 1fr;
+      }
+
+      .synthia-sovereign .ss-card summary,
+      .synthia-sovereign .ss-card-body,
+      .synthia-sovereign .ss-command-top,
+      .synthia-sovereign .ss-command-body {
+        padding: 1rem;
+      }
+
+      .synthia-sovereign .ss-summary-main {
+        gap: 0.85rem;
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      *, *::before, *::after {
-        animation: none !important;
-        transition-duration: 0.01ms !important;
-        transition-delay: 0ms !important;
+      html {
+        scroll-behavior: auto;
+      }
+
+      .synthia-sovereign .ss-scan-card,
+      .synthia-sovereign .ss-button {
+        transition: none;
       }
     }
   </style>
 </head>
 <body>
-  <main class="page">
-    <section class="hero" aria-labelledby="title">
-      <div class="brand"><span class="brand-mark" aria-hidden="true"></span> ExecFunc • Synthia</div>
-      <h1 id="title">How Synthia works in 4 simple pieces</h1>
-      <p>Ask one question. Add any piece you want. Mix them together. You do not need to learn anything technical.</p>
-      <div class="hero-strap">The whole idea: make the question clearer, compare more than one opinion, go deeper when needed, and choose the style of answer you want.</div>
+  <!-- Standalone, CMS-friendly page. To embed inside an existing site, copy the <main> block and the scoped styles above. -->
+  <main class="synthia-sovereign" id="top">
+    <section class="ss-section ss-hero">
+      <div class="ss-wrap">
+        <p class="ss-eyebrow">Synthia • Sovereign Search</p>
+        <h1>How Synthia's Sovereign Search works in 5 simple pieces</h1>
+        <p class="ss-hero-copy">
+          Ask one question. Turn on any piece you want. Or use a Global Command and let Synthia choose the setup.
+          You do not need to learn anything technical.
+        </p>
 
-      <div class="mini-flow" aria-label="Quick overview">
-        <div class="mini-step" style="--accent: var(--max)">
-          <span>Max Prompt</span>
-          <strong>Ask a clearer question</strong>
-        </div>
-        <div class="mini-step" style="--accent: var(--council)">
-          <span>Council</span>
-          <strong>Get more than one opinion</strong>
-        </div>
-        <div class="mini-step" style="--accent: var(--compute)">
-          <span>Compute This</span>
-          <strong>Use the strongest AI for hard questions</strong>
-        </div>
-        <div class="mini-step" style="--accent: var(--modes)">
-          <span>Modes</span>
-          <strong>Choose the angle of the answer</strong>
-        </div>
-      </div>
-
-      <div class="intro-note">Tap any card below for the simple explanation, why it helps, and what actually happens.</div>
-    </section>
-
-    <div class="section-head">
-      <div>
-        <h2>The 4 pieces</h2>
-        <p>Fast to scan closed. Easy to understand when opened.</p>
-      </div>
-      <div class="ghost-row" aria-label="Accordion controls">
-        <button class="ghost-btn" id="expandAll" type="button">Expand all</button>
-        <button class="ghost-btn" id="collapseAll" type="button">Collapse all</button>
-      </div>
-    </div>
-
-    <section class="accordion" aria-label="Synthia components">
-      <article class="card" data-card style="--accent: var(--max); --accent-soft: rgba(143,121,255,0.14); --delay: 60ms;">
-        <div class="card-btn" role="button" tabindex="0" aria-expanded="false">
-          <div class="card-top">
-            <div class="card-main">
-              <div class="icon-wrap" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <circle cx="11" cy="11" r="6"></circle>
-                  <path d="M16 16l4 4"></path>
-                  <path d="M8.5 11h5"></path>
-                  <path d="M11 8.5v5"></path>
-                </svg>
-              </div>
-              <div>
-                <div class="card-eyebrow">1 · Ask clearer first</div>
-                <h3>Max Prompt</h3>
-                <p class="summary">Synthia asks follow-up questions before answering, so the real answer is much sharper.</p>
-              </div>
-            </div>
-            <div class="aside">
-              <div class="say">
-                <div class="say-label">Just say</div>
-                <div class="say-pill">max prompt this</div>
-              </div>
-              <div class="chev" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg>
-              </div>
-            </div>
-          </div>
+        <div class="ss-core-note" aria-label="Core system note">
+          <strong>The 5 pieces below are the core system.</strong>
+          <span>
+            Global Commands are the shortcuts: <code>maximize</code> runs everything at maximum,
+            and <code>optimize</code> makes a smart selection based on context.
+          </span>
         </div>
 
-        <div class="card-body">
-          <div class="card-inner">
-            <div class="body-grid">
-              <div class="info">
-                <div class="info-label">What it is</div>
-                <p>A quick back-and-forth that turns a fuzzy question into a clear one before the real answer begins.</p>
-              </div>
-              <div class="info">
-                <div class="info-label">Why it matters</div>
-                <p>Vague questions usually get vague answers. This helps Synthia stop guessing and start understanding.</p>
-              </div>
-              <div class="info">
-                <div class="info-label">What happens</div>
-                <p>You ask. Synthia asks 5–9 short questions. You answer them. Then she gives you a much better response.</p>
-              </div>
-            </div>
+        <div class="ss-quick-scan" role="list" aria-label="Quick scan of the 5 core pieces">
+          <a class="ss-scan-card" href="#max-prompt" role="listitem">
+            <span class="ss-scan-number">1</span>
+            <h3>Max Prompt</h3>
+            <p>Sharpen the question before the real answer begins.</p>
+          </a>
 
-            <div class="micro-flow" aria-label="Max Prompt flow">
-              <div class="micro-pill"><span>You ask</span><strong>Your first question</strong></div>
-              <div class="micro-pill"><span>Synthia asks</span><strong>Smart follow-up questions</strong></div>
-              <div class="micro-pill"><span>You get</span><strong>A sharper final answer</strong></div>
-            </div>
+          <a class="ss-scan-card" href="#ground-this" role="listitem">
+            <span class="ss-scan-number">2</span>
+            <h3>Ground</h3>
+            <p>Anchor the answer in outside facts, sources, and reality.</p>
+          </a>
 
-            <div class="example-questions">
-              <div class="info-label">The kind of questions she may ask</div>
-              <div class="question-list">
-                <div class="question-chip">Who is this for?</div>
-                <div class="question-chip">What have you already tried?</div>
-                <div class="question-chip">What would success look like?</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
+          <a class="ss-scan-card" href="#council" role="listitem">
+            <span class="ss-scan-number">3</span>
+            <h3>Council</h3>
+            <p>Bring together multiple model perspectives in one result.</p>
+          </a>
 
-      <article class="card" data-card style="--accent: var(--council); --accent-soft: rgba(78,165,255,0.14); --delay: 120ms;">
-        <div class="card-btn" role="button" tabindex="0" aria-expanded="false">
-          <div class="card-top">
-            <div class="card-main">
-              <div class="icon-wrap" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <circle cx="6.5" cy="8" r="2.5"></circle>
-                  <circle cx="17.5" cy="8" r="2.5"></circle>
-                  <circle cx="12" cy="15.5" r="2.5"></circle>
-                  <path d="M8.8 9.6l1.9 3"></path>
-                  <path d="M15.2 9.6l-1.9 3"></path>
-                  <path d="M9 8h6"></path>
-                </svg>
-              </div>
-              <div>
-                <div class="card-eyebrow">2 · Get multiple opinions</div>
-                <h3>Council</h3>
-                <p class="summary">Several separate AIs answer first. Synthia then combines the strongest ideas.</p>
-              </div>
-            </div>
-            <div class="aside">
-              <div class="say">
-                <div class="say-label">Just say</div>
-                <div class="say-pill">council this</div>
-              </div>
-              <div class="chev" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg>
-              </div>
-            </div>
-          </div>
-        </div>
+          <a class="ss-scan-card" href="#compute-this" role="listitem">
+            <span class="ss-scan-number">4</span>
+            <h3>Compute This</h3>
+            <p>Add more thinking power for harder, messier questions.</p>
+          </a>
 
-        <div class="card-body">
-          <div class="card-inner">
-            <div class="body-grid">
-              <div class="info">
-                <div class="info-label">What it is</div>
-                <p>Your question is answered by 3–4 different AI systems, each working on its own.</p>
-              </div>
-              <div class="info">
-                <div class="info-label">Why it matters</div>
-                <p>One answer can sound confident and still miss something. Multiple opinions reveal blind spots and better ideas.</p>
-              </div>
-              <div class="info">
-                <div class="info-label">What happens</div>
-                <p>Each AI answers separately. They do not copy each other. Synthia reads them all and gives you one stronger result.</p>
-              </div>
-            </div>
-
-            <div class="micro-flow" aria-label="Council flow">
-              <div class="micro-pill"><span>Your question</span><strong>Sent to each AI</strong></div>
-              <div class="micro-pill"><span>Separate answers</span><strong>Different takes, no copying</strong></div>
-              <div class="micro-pill"><span>Synthia</span><strong>Combines the best parts</strong></div>
-            </div>
-
-            <div class="example-questions">
-              <div class="info-label">Why people like it</div>
-              <div class="question-list">
-                <div class="question-chip">You get a second, third, and fourth opinion instead of trusting one answer.</div>
-                <div class="question-chip">The most useful clue is often where the answers disagree.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="card" data-card style="--accent: var(--compute); --accent-soft: rgba(54,214,163,0.14); --delay: 180ms;">
-        <div class="card-btn" role="button" tabindex="0" aria-expanded="false">
-          <div class="card-top">
-            <div class="card-main">
-              <div class="icon-wrap" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M13 2L5 14h5l-1 8 8-12h-5l1-8z"></path>
-                </svg>
-              </div>
-              <div>
-                <div class="card-eyebrow">3 · Go deepest when needed</div>
-                <h3>Compute This</h3>
-                <p class="summary">For hard questions, Synthia sends the job to the strongest AI available.</p>
-              </div>
-            </div>
-            <div class="aside">
-              <div class="say">
-                <div class="say-label">Just say</div>
-                <div class="say-pill">compute this</div>
-              </div>
-              <div class="chev" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-body">
-          <div class="card-inner">
-            <div class="body-grid">
-              <div class="info">
-                <div class="info-label">What it is</div>
-                <p>The “bring out the heavy equipment” option for questions that need more depth than usual.</p>
-              </div>
-              <div class="info">
-                <div class="info-label">Why it matters</div>
-                <p>Some questions are big, messy, or important enough that they deserve extra thinking time.</p>
-              </div>
-              <div class="info">
-                <div class="info-label">Human in the loop</div>
-                <p>Synthia prepares the prompt, then Dad or another manager pastes it into ChatGPT Pro and pastes the result back. That is on purpose for quality control and cost control.</p>
-              </div>
-            </div>
-
-            <div class="micro-flow" aria-label="Compute This flow">
-              <div class="micro-pill"><span>Synthia</span><strong>Prepares the job</strong></div>
-              <div class="micro-pill"><span>Human relay</span><strong>Pastes it into ChatGPT Pro</strong></div>
-              <div class="micro-pill"><span>Result returns</span><strong>Deep answer comes back</strong></div>
-            </div>
-
-            <div class="example-questions">
-              <div class="info-label">Best for</div>
-              <div class="question-list">
-                <div class="question-chip">Important decisions</div>
-                <div class="question-chip">Messy problems with lots of moving parts</div>
-                <div class="question-chip">Anything where “good enough” is not good enough</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="card" data-card style="--accent: var(--modes); --accent-soft: rgba(255,178,93,0.14); --delay: 240ms;">
-        <div class="card-btn" role="button" tabindex="0" aria-expanded="false">
-          <div class="card-top">
-            <div class="card-main">
-              <div class="icon-wrap" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="8"></circle>
-                  <path d="M12 4v16"></path>
-                  <path d="M4 12h16"></path>
-                  <path d="M8.5 8.5l7 7"></path>
-                </svg>
-              </div>
-              <div>
-                <div class="card-eyebrow">4 · Change the angle</div>
-                <h3>Modes</h3>
-                <p class="summary">Same question. Different style of thinking.</p>
-              </div>
-            </div>
-            <div class="aside">
-              <div class="say">
-                <div class="say-label">Just say</div>
-                <div class="say-pill">in wisdom mode</div>
-              </div>
-              <div class="chev" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-body">
-          <div class="card-inner">
-            <div class="body-grid">
-              <div class="info">
-                <div class="info-label">What it is</div>
-                <p>A mode is like choosing the lens for the answer. Same topic, different style of thinking.</p>
-              </div>
-              <div class="info">
-                <div class="info-label">Why it matters</div>
-                <p>The best answer depends on what you need: practical steps, deeper meaning, balanced tension, or better persuasion.</p>
-              </div>
-              <div class="info">
-                <div class="info-label">What happens</div>
-                <p>You add the mode you want. Synthia approaches the whole request through that lens from start to finish.</p>
-              </div>
-            </div>
-
-            <div class="mode-grid" aria-label="The four modes">
-              <div class="mode-card"><strong>🔧 Builder</strong><p>The default. Practical, grounded, step by step. “What actually works?”</p></div>
-              <div class="mode-card"><strong>🌿 Wisdom</strong><p>Meaning, values, life choices. “What matters here?”</p></div>
-              <div class="mode-card"><strong>⚖️ Tension</strong><p>Holds both sides without forcing fake agreement. “What if both sides are right?”</p></div>
-              <div class="mode-card"><strong>🧲 Persuasion</strong><p>Focused on influence and buy-in. “How do I convince someone?”</p></div>
-            </div>
-
-            <div class="mode-example">
-              <div class="info-label">Same question, different mode</div>
-              <div class="tabs" role="tablist" aria-label="Mode example tabs">
-                <button class="tab-btn active" type="button" data-mode-tab="builder" role="tab" aria-selected="true">🔧 Builder</button>
-                <button class="tab-btn" type="button" data-mode-tab="wisdom" role="tab" aria-selected="false">🌿 Wisdom</button>
-                <button class="tab-btn" type="button" data-mode-tab="tension" role="tab" aria-selected="false">⚖️ Tension</button>
-                <button class="tab-btn" type="button" data-mode-tab="persuasion" role="tab" aria-selected="false">🧲 Persuasion</button>
-              </div>
-              <p class="mode-output" id="modeOutput"><strong>Example question:</strong> “How should I talk to my teenager about screen time?”<br><br><strong>Builder mode:</strong> A practical conversation plan, likely sticking points, and what usually works at home.</p>
-            </div>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <section class="combo-section" aria-labelledby="combining-title">
-      <div class="combo-head">
-        <h2 id="combining-title">Combining them</h2>
-        <p>These pieces stack. You can use one, two, three, or all four together. The idea is simple: build the kind of help you want for this one question.</p>
-      </div>
-
-      <div class="presets" aria-label="Preset combinations">
-        <button class="preset active" type="button" data-preset="full">Full clarity + multiple opinions + meaning</button>
-        <button class="preset" type="button" data-preset="council">Quick second opinion</button>
-        <button class="preset" type="button" data-preset="compute">Deep practical answer</button>
-      </div>
-
-      <div class="builder-panel">
-        <p class="builder-label">Build your own combo</p>
-        <div class="toggles" aria-label="Feature toggles">
-          <button class="toggle active" type="button" data-toggle="max">Max Prompt</button>
-          <button class="toggle active" type="button" data-toggle="council">Council</button>
-          <button class="toggle" type="button" data-toggle="compute">Compute This</button>
-        </div>
-
-        <p class="builder-label">Choose the mode</p>
-        <div class="mode-toggles" aria-label="Mode toggles">
-          <button class="mode-toggle" type="button" data-mode="builder">🔧 Builder</button>
-          <button class="mode-toggle active" type="button" data-mode="wisdom">🌿 Wisdom</button>
-          <button class="mode-toggle" type="button" data-mode="tension">⚖️ Tension</button>
-          <button class="mode-toggle" type="button" data-mode="persuasion">🧲 Persuasion</button>
-        </div>
-
-        <div class="phrase-wrap">
-          <p class="builder-label">What you would say</p>
-          <div class="phrase-card"><code id="comboPhrase">max prompt, council this in wisdom mode</code></div>
-          <div class="phrase-actions">
-            <button class="copy-btn" id="copyPhrase" type="button">Copy phrase</button>
-          </div>
-          <p class="plain-english" id="comboMeaning">Synthia first asks follow-up questions, then gets multiple separate opinions, then gives you one meaning-focused answer.</p>
-        </div>
-      </div>
-
-      <div class="mini-examples" aria-label="Combination examples">
-        <div class="example-card">
-          <code>max prompt, council this in wisdom mode</code>
-          <p>First make the question clearer, then get multiple opinions, then answer in a meaning-focused way.</p>
-        </div>
-        <div class="example-card">
-          <code>council this</code>
-          <p>Keep it simple: get several separate takes and one stronger final answer.</p>
-        </div>
-        <div class="example-card">
-          <code>compute this in builder mode</code>
-          <p>Send it to the strongest AI and bring back a practical, step-by-step answer.</p>
+          <a class="ss-scan-card" href="#mode" role="listitem">
+            <span class="ss-scan-number">5</span>
+            <h3>Mode</h3>
+            <p>Choose the lens so the answer feels right for the job.</p>
+          </a>
         </div>
       </div>
     </section>
 
-    <footer>
-      ExecFunc • Synthia pipeline explainer<br />
-      Built to be readable in 30 seconds and understandable in a few minutes.
-    </footer>
+    <section class="ss-section">
+      <div class="ss-wrap">
+        <div class="ss-section-head">
+          <div>
+            <p class="ss-kicker">The 5 core pieces</p>
+            <h2>Fast to scan. Easy to understand when opened.</h2>
+            <p>Each card uses the same simple pattern: what to say, what it does, why it helps, and what happens.</p>
+          </div>
+
+          <div class="ss-controls" aria-label="Accordion controls">
+            <button class="ss-button" type="button" data-action="expand">Expand all</button>
+            <button class="ss-button" type="button" data-action="collapse">Collapse all</button>
+          </div>
+        </div>
+
+        <div class="ss-card-grid">
+          <details class="ss-card" id="max-prompt">
+            <summary>
+              <div class="ss-summary-main">
+                <span class="ss-step">1</span>
+                <div>
+                  <p class="ss-card-label">Sharpen the question</p>
+                  <h3>Max Prompt</h3>
+                  <p class="ss-card-blurb">Turns a rough question into a clear one before the real answer begins.</p>
+                </div>
+              </div>
+            </summary>
+            <div class="ss-card-body">
+              <div class="ss-mini-grid">
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Just say</p>
+                  <p><span class="ss-code">max prompt this</span></p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What it does</p>
+                  <p>Adds a few short follow-up questions so the final answer can be more exact.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Why it helps</p>
+                  <p>Clear questions lead to clearer answers. It cuts down on guesswork.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What happens</p>
+                  <p>You answer a few quick prompts, then Synthia comes back with a sharper response.</p>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <details class="ss-card" id="ground-this">
+            <summary>
+              <div class="ss-summary-main">
+                <span class="ss-step">2</span>
+                <div>
+                  <p class="ss-card-label">Anchor in external reality</p>
+                  <h3>Ground</h3>
+                  <p class="ss-card-blurb">Checks outside facts, sources, or examples before answering.</p>
+                </div>
+              </div>
+            </summary>
+            <div class="ss-card-body">
+              <div class="ss-mini-grid">
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Just say</p>
+                  <p><span class="ss-code">ground this</span></p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What it does</p>
+                  <p>Looks outward first so the answer starts from real information, not just a best guess.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Why it helps</p>
+                  <p>It makes the answer feel more trustworthy, concrete, and tied to what is actually out there.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What happens</p>
+                  <p>Synthia checks relevant outside material, then answers from a more grounded starting point.</p>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <details class="ss-card" id="council">
+            <summary>
+              <div class="ss-summary-main">
+                <span class="ss-step">3</span>
+                <div>
+                  <p class="ss-card-label">Integrate multiple model perspectives</p>
+                  <h3>Council</h3>
+                  <p class="ss-card-blurb">More than one model looks at the question, then Synthia combines the strongest ideas.</p>
+                </div>
+              </div>
+            </summary>
+            <div class="ss-card-body">
+              <div class="ss-mini-grid">
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Just say</p>
+                  <p><span class="ss-code">council this</span></p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What it does</p>
+                  <p>Gets separate takes from multiple models instead of relying on one first answer.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Why it helps</p>
+                  <p>Different models notice different strengths, gaps, and possibilities.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What happens</p>
+                  <p>Synthia compares the different outputs and gives you one stronger, integrated result.</p>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <details class="ss-card" id="compute-this">
+            <summary>
+              <div class="ss-summary-main">
+                <span class="ss-step">4</span>
+                <div>
+                  <p class="ss-card-label">Address complexity</p>
+                  <h3>Compute This</h3>
+                  <p class="ss-card-blurb">Gives harder problems more time, more reasoning, and more care.</p>
+                </div>
+              </div>
+            </summary>
+            <div class="ss-card-body">
+              <div class="ss-mini-grid">
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Just say</p>
+                  <p><span class="ss-code">compute this</span></p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What it does</p>
+                  <p>Uses a deeper reasoning path for messy, important, or high-stakes questions.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Why it helps</p>
+                  <p>Complex problems usually need slower, more careful thinking than a quick first pass.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What happens</p>
+                  <p>Synthia spends more effort on the problem and returns a more worked-through answer.</p>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <details class="ss-card" id="mode">
+            <summary>
+              <div class="ss-summary-main">
+                <span class="ss-step">5</span>
+                <div>
+                  <p class="ss-card-label">Choose the user's lens</p>
+                  <h3>Mode</h3>
+                  <p class="ss-card-blurb">Keeps the same question, but changes the style and lens of the answer.</p>
+                </div>
+              </div>
+            </summary>
+            <div class="ss-card-body">
+              <div class="ss-mini-grid">
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Just say</p>
+                  <p><span class="ss-code">in builder mode</span></p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What it does</p>
+                  <p>Sets the lens for the full response without changing the question itself.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Why it helps</p>
+                  <p>The best answer depends on the kind of help you want.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What happens</p>
+                  <p>Synthia carries that lens through the answer from start to finish.</p>
+                </div>
+                <div class="ss-mini ss-mini--wide">
+                  <p class="ss-mini-label">Common modes</p>
+                  <div class="ss-mode-grid" aria-label="Common modes">
+                    <div class="ss-mode-item">
+                      <strong>Builder</strong>
+                      <span>Practical and step by step.</span>
+                    </div>
+                    <div class="ss-mode-item">
+                      <strong>Wisdom</strong>
+                      <span>Reflective and values-aware.</span>
+                    </div>
+                    <div class="ss-mode-item">
+                      <strong>Tension</strong>
+                      <span>Holds both sides honestly.</span>
+                    </div>
+                    <div class="ss-mode-item">
+                      <strong>Persuasion</strong>
+                      <span>Focused on buy-in and influence.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="ss-section">
+      <div class="ss-wrap">
+        <div class="ss-section-head">
+          <div>
+            <p class="ss-kicker">Global Commands</p>
+            <h2>Simple shortcuts for people who do not want to choose the setup.</h2>
+            <p>The 5 pieces above are the core components. These commands simply choose the setup for you.</p>
+          </div>
+        </div>
+
+        <div class="ss-command-grid">
+          <article class="ss-command-card">
+            <div class="ss-command-top">
+              <span class="ss-command-tag">Global Command</span>
+              <h3>Maximize</h3>
+              <p>Run all 5 core pieces at maximum settings.</p>
+            </div>
+            <div class="ss-command-body">
+              <div class="ss-mini-grid">
+                <div class="ss-command-mini">
+                  <p class="ss-mini-label">Just say</p>
+                  <p><span class="ss-code">maximize</span></p>
+                </div>
+                <div class="ss-command-mini">
+                  <p class="ss-mini-label">Best for</p>
+                  <p>Questions that matter enough to justify the fullest possible pass.</p>
+                </div>
+                <div class="ss-command-mini ss-mini--wide">
+                  <p class="ss-mini-label">What happens</p>
+                  <p>Synthia turns on the full system and pushes every piece to its strongest setting.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="ss-command-card">
+            <div class="ss-command-top">
+              <span class="ss-command-tag">Global Command</span>
+              <h3>Optimize</h3>
+              <p>Make a smart selection based on context.</p>
+            </div>
+            <div class="ss-command-body">
+              <div class="ss-mini-grid">
+                <div class="ss-command-mini">
+                  <p class="ss-mini-label">Just say</p>
+                  <p><span class="ss-code">optimize</span></p>
+                </div>
+                <div class="ss-command-mini">
+                  <p class="ss-mini-label">Best for</p>
+                  <p>When you want a strong answer without deciding which pieces to turn on.</p>
+                </div>
+                <div class="ss-command-mini ss-mini--wide">
+                  <p class="ss-mini-label">What happens</p>
+                  <p>Synthia looks at the question, picks the smartest mix, and uses the amount of each piece that fits the job.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <p class="ss-footer-note">
+          Core pieces do the work. Global Commands choose the setup.
+        </p>
+      </div>
+    </section>
   </main>
 
   <script>
     (function () {
-      const cards = Array.from(document.querySelectorAll('[data-card]'));
+      const root = document.querySelector('.synthia-sovereign');
+      if (!root) return;
 
-      function setCardHeight(card) {
-        const body = card.querySelector('.card-body');
-        const inner = card.querySelector('.card-inner');
-        if (!body || !inner) return;
-        if (card.classList.contains('open')) {
-          body.style.height = inner.scrollHeight + 'px';
-        } else {
-          body.style.height = '0px';
-        }
-      }
+      const cards = Array.from(root.querySelectorAll('.ss-card'));
+      const expandButton = root.querySelector('[data-action="expand"]');
+      const collapseButton = root.querySelector('[data-action="collapse"]');
 
-      function openCard(card) {
-        card.classList.add('open');
-        const btn = card.querySelector('.card-btn');
-        if (btn) btn.setAttribute('aria-expanded', 'true');
-        setCardHeight(card);
-      }
-
-      function closeCard(card) {
-        card.classList.remove('open');
-        const btn = card.querySelector('.card-btn');
-        if (btn) btn.setAttribute('aria-expanded', 'false');
-        setCardHeight(card);
-      }
-
-      cards.forEach((card) => {
-        const button = card.querySelector('.card-btn');
-        if (!button) return;
-        function toggleCard() {
-          const isOpen = card.classList.contains('open');
-          if (isOpen) {
-            closeCard(card);
-          } else {
-            openCard(card);
-          }
-        }
-
-        button.addEventListener('click', toggleCard);
-        button.addEventListener('keydown', (event) => {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            toggleCard();
-          }
-        });
-      });
-
-      const expandAll = document.getElementById('expandAll');
-      const collapseAll = document.getElementById('collapseAll');
-      if (expandAll) expandAll.addEventListener('click', () => cards.forEach(openCard));
-      if (collapseAll) collapseAll.addEventListener('click', () => cards.forEach(closeCard));
-
-      const modeMessages = {
-        builder: '<strong>Example question:</strong> “How should I talk to my teenager about screen time?”<br><br><strong>Builder mode:</strong> A practical conversation plan, likely sticking points, and what usually works at home.',
-        wisdom: '<strong>Example question:</strong> “How should I talk to my teenager about screen time?”<br><br><strong>Wisdom mode:</strong> What values are really in conflict here, and what kind of parent-child relationship you want to build.',
-        tension: '<strong>Example question:</strong> “How should I talk to my teenager about screen time?”<br><br><strong>Tension mode:</strong> How both freedom and protection can be valid, and what gets lost if you rush to one side.',
-        persuasion: '<strong>Example question:</strong> “How should I talk to my teenager about screen time?”<br><br><strong>Persuasion mode:</strong> The wording and framing most likely to reduce defensiveness and get buy-in.'
-      };
-
-      const tabButtons = Array.from(document.querySelectorAll('[data-mode-tab]'));
-      const modeOutput = document.getElementById('modeOutput');
-      tabButtons.forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const mode = btn.getAttribute('data-mode-tab');
-          tabButtons.forEach((b) => {
-            const active = b === btn;
-            b.classList.toggle('active', active);
-            b.setAttribute('aria-selected', active ? 'true' : 'false');
+      if (expandButton) {
+        expandButton.addEventListener('click', function () {
+          cards.forEach(function (card) {
+            card.open = true;
           });
-          if (modeOutput && modeMessages[mode]) modeOutput.innerHTML = modeMessages[mode];
-        });
-      });
-
-      const state = {
-        max: true,
-        council: true,
-        compute: false,
-        mode: 'wisdom'
-      };
-
-      const toggles = Array.from(document.querySelectorAll('.toggle'));
-      const modeToggles = Array.from(document.querySelectorAll('.mode-toggle'));
-      const presets = Array.from(document.querySelectorAll('.preset'));
-      const phrase = document.getElementById('comboPhrase');
-      const meaning = document.getElementById('comboMeaning');
-      const copyPhrase = document.getElementById('copyPhrase');
-
-      function titleCaseMode(mode) {
-        return {
-          builder: 'builder',
-          wisdom: 'wisdom',
-          tension: 'tension',
-          persuasion: 'persuasion'
-        }[mode] || mode;
-      }
-
-      function partsSentence() {
-        const parts = [];
-        if (state.max) parts.push('asks follow-up questions');
-        if (state.council) parts.push('gets multiple separate opinions');
-        if (state.compute) parts.push('sends the question to the strongest AI through the human relay');
-        return parts;
-      }
-
-      function buildPhraseText() {
-        const parts = [];
-        if (state.max) parts.push('max prompt');
-        if (state.council) parts.push('council this');
-        if (state.compute) parts.push('compute this');
-
-        if (parts.length === 0) {
-          return `in ${titleCaseMode(state.mode)} mode`;
-        }
-
-        return `${parts.join(', ')} in ${titleCaseMode(state.mode)} mode`;
-      }
-
-      function joinHuman(items) {
-        if (items.length === 0) return '';
-        if (items.length === 1) return items[0];
-        if (items.length === 2) return items[0] + ' and ' + items[1];
-        return items.slice(0, -1).join(', ') + ', and ' + items[items.length - 1];
-      }
-
-      function buildMeaningText() {
-        const lens = {
-          builder: 'a practical, grounded answer',
-          wisdom: 'a meaning-focused answer',
-          tension: 'an answer that holds both sides without forcing fake agreement',
-          persuasion: 'an answer focused on influence and buy-in'
-        }[state.mode];
-
-        const actions = partsSentence();
-        if (actions.length === 0) {
-          return `No extra tools — just answer the question in ${lens}.`;
-        }
-
-        return `Synthia ${joinHuman(actions)}, then gives you ${lens}.`;
-      }
-
-      function syncButtons() {
-        toggles.forEach((btn) => {
-          const key = btn.getAttribute('data-toggle');
-          btn.classList.toggle('active', !!state[key]);
-          btn.setAttribute('aria-pressed', state[key] ? 'true' : 'false');
-        });
-
-        modeToggles.forEach((btn) => {
-          const mode = btn.getAttribute('data-mode');
-          const active = state.mode === mode;
-          btn.classList.toggle('active', active);
-          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
         });
       }
 
-      function clearPresetState() {
-        presets.forEach((btn) => btn.classList.remove('active'));
-      }
-
-      function updateCombo() {
-        syncButtons();
-        if (phrase) phrase.textContent = buildPhraseText();
-        if (meaning) meaning.textContent = buildMeaningText();
-      }
-
-      toggles.forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const key = btn.getAttribute('data-toggle');
-          state[key] = !state[key];
-          clearPresetState();
-          updateCombo();
-        });
-      });
-
-      modeToggles.forEach((btn) => {
-        btn.addEventListener('click', () => {
-          state.mode = btn.getAttribute('data-mode');
-          clearPresetState();
-          updateCombo();
-        });
-      });
-
-      const presetStates = {
-        full: { max: true, council: true, compute: false, mode: 'wisdom' },
-        council: { max: false, council: true, compute: false, mode: 'builder' },
-        compute: { max: false, council: false, compute: true, mode: 'builder' }
-      };
-
-      presets.forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const preset = btn.getAttribute('data-preset');
-          const next = presetStates[preset];
-          if (!next) return;
-          Object.assign(state, next);
-          presets.forEach((b) => b.classList.toggle('active', b === btn));
-          updateCombo();
-        });
-      });
-
-      if (copyPhrase) {
-        copyPhrase.addEventListener('click', async () => {
-          const text = phrase ? phrase.textContent : '';
-          try {
-            if (navigator.clipboard && text) {
-              await navigator.clipboard.writeText(text);
-              copyPhrase.classList.add('done');
-              copyPhrase.textContent = 'Copied';
-              setTimeout(() => {
-                copyPhrase.classList.remove('done');
-                copyPhrase.textContent = 'Copy phrase';
-              }, 1400);
-            }
-          } catch (e) {
-            copyPhrase.textContent = 'Copy manually';
-          }
+      if (collapseButton) {
+        collapseButton.addEventListener('click', function () {
+          cards.forEach(function (card) {
+            card.open = false;
+          });
         });
       }
-
-      window.addEventListener('resize', () => cards.forEach(setCardHeight));
-      window.addEventListener('load', () => {
-        cards.forEach(setCardHeight);
-        updateCombo();
-      });
-    })();
+    }());
   </script>
 </body>
 </html>
