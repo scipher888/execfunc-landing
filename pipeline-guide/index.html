@@ -2,1179 +2,694 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Pipeline Guide — Synthia's Sovereign Search</title>
-  <meta name="description" content="A clean guide to Synthia's Sovereign Search: the 5 core pieces, when to use Maximize vs Optimize, and how the system fits together.">
-  <meta property="og:title" content="Pipeline Guide — Synthia's Sovereign Search">
-  <meta property="og:description" content="A clean guide to Synthia's Sovereign Search: the 5 core pieces, when to use Maximize vs Optimize, and how the system fits together.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://execfunc.ai/pipeline-guide/">
-  <meta property="og:image" content="https://execfunc.ai/logo.png">
-  <meta property="og:site_name" content="ExecFunc">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Pipeline Guide — Synthia's Sovereign Search">
-  <meta name="twitter:description" content="A clean guide to Synthia's Sovereign Search: the 5 core pieces, when to use Maximize vs Optimize, and how the system fits together.">
-  <meta name="twitter:image" content="https://execfunc.ai/logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Synthia — Sovereign Search</title>
+  <meta name="description" content="How Synthia's Sovereign Search works in 5 simple pieces.">
   <style>
     :root {
-      color-scheme: dark;
-      --bg: #090b10;
-      --bg-2: #0d1017;
-      --panel: rgba(17, 22, 32, 0.84);
-      --panel-strong: rgba(21, 27, 39, 0.94);
-      --panel-soft: rgba(255, 255, 255, 0.04);
-      --line: rgba(255, 255, 255, 0.09);
-      --line-strong: rgba(255, 255, 255, 0.16);
-      --text: #f7f8fb;
-      --muted: #a5afc2;
-      --soft: #cdd4e3;
-      --shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
-      --shadow-strong: 0 32px 84px rgba(0, 0, 0, 0.48);
-      --radius-xl: 28px;
-      --radius-lg: 24px;
-      --radius-md: 18px;
-      --radius-sm: 14px;
-      --prompt: #8f79ff;
-      --prompt-rgb: 143, 121, 255;
-      --ground: #4ea5ff;
-      --ground-rgb: 78, 165, 255;
-      --council: #36d6a3;
-      --council-rgb: 54, 214, 163;
-      --compute: #ffb25d;
-      --compute-rgb: 255, 178, 93;
-      --mode: #ff7f96;
-      --mode-rgb: 255, 127, 150;
-      --global-a: #8f79ff;
-      --global-a-rgb: 143, 121, 255;
-      --global-b: #36d6a3;
-      --global-b-rgb: 54, 214, 163;
-      --focus: rgba(143, 121, 255, 0.34);
-      --container: 1180px;
+      color-scheme: light;
     }
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       margin: 0;
-      min-height: 100vh;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
+      background: #f6f8fc;
+      color: #101828;
+      line-height: 1.5;
+    }
+
+    .synthia-sovereign {
+      --ss-bg: #f6f8fc;
+      --ss-surface: #ffffff;
+      --ss-surface-soft: #f7f9ff;
+      --ss-line: #e4e7ec;
+      --ss-text: #101828;
+      --ss-muted: #475467;
+      --ss-accent: #4f46e5;
+      --ss-accent-soft: #eef2ff;
+      --ss-radius: 22px;
+      --ss-shadow: 0 16px 44px rgba(16, 24, 40, 0.06);
+      min-height: 100vh;
       background:
-        radial-gradient(circle at 18% 8%, rgba(143, 121, 255, 0.18), transparent 32%),
-        radial-gradient(circle at 84% 14%, rgba(78, 165, 255, 0.14), transparent 28%),
-        radial-gradient(circle at 16% 82%, rgba(255, 127, 150, 0.09), transparent 24%),
-        radial-gradient(circle at 50% 100%, rgba(54, 214, 163, 0.09), transparent 36%),
-        linear-gradient(180deg, #07090d 0%, #0a0d13 45%, #090b10 100%);
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-      position: relative;
-      overflow-x: hidden;
-      isolation: isolate;
+        radial-gradient(circle at top left, rgba(79, 70, 229, 0.10), transparent 28%),
+        radial-gradient(circle at top right, rgba(14, 165, 233, 0.08), transparent 26%),
+        var(--ss-bg);
     }
 
-    body::before,
-    body::after {
-      content: "";
-      position: fixed;
-      inset: auto;
-      pointer-events: none;
-      z-index: 0;
-      filter: blur(70px);
-      opacity: 0.65;
-      border-radius: 999px;
+    .synthia-sovereign a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    body::before {
-      width: 180px;
-      height: 180px;
-      top: 12%;
-      left: -30px;
-      background: rgba(143, 121, 255, 0.18);
-      animation: driftA 18s ease-in-out infinite;
+    .synthia-sovereign .ss-wrap {
+      width: min(1120px, calc(100% - 2rem));
+      margin-inline: auto;
     }
 
-    body::after {
-      width: 220px;
-      height: 220px;
-      right: -60px;
-      bottom: 12%;
-      background: rgba(54, 214, 163, 0.14);
-      animation: driftB 20s ease-in-out infinite;
+    .synthia-sovereign .ss-section {
+      padding: clamp(3.25rem, 8vw, 6rem) 0;
     }
 
-    @keyframes driftA {
-      0%, 100% { transform: translate3d(0, 0, 0); }
-      50% { transform: translate3d(22px, -20px, 0); }
+    .synthia-sovereign .ss-section + .ss-section {
+      padding-top: 0;
     }
 
-    @keyframes driftB {
-      0%, 100% { transform: translate3d(0, 0, 0); }
-      50% { transform: translate3d(-20px, 18px, 0); }
+    .synthia-sovereign .ss-eyebrow,
+    .synthia-sovereign .ss-kicker {
+      margin: 0 0 0.85rem;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ss-accent);
     }
 
-    @keyframes riseIn {
-      from {
-        opacity: 0;
-        transform: translate3d(0, 24px, 0) scale(0.985);
-      }
-      to {
-        opacity: 1;
-        transform: translate3d(0, 0, 0) scale(1);
-      }
+    .synthia-sovereign h1,
+    .synthia-sovereign h2,
+    .synthia-sovereign h3,
+    .synthia-sovereign p {
+      margin-top: 0;
     }
 
-    @keyframes pulseGlow {
-      0%, 100% { opacity: 0.5; transform: scale(1); }
-      50% { opacity: 0.85; transform: scale(1.08); }
+    .synthia-sovereign h1 {
+      margin-bottom: 1rem;
+      font-size: clamp(2.25rem, 5vw, 4.1rem);
+      line-height: 1.03;
+      letter-spacing: -0.035em;
+      max-width: 12ch;
     }
 
-    main {
-      position: relative;
-      z-index: 1;
+    .synthia-sovereign h2 {
+      margin-bottom: 0.65rem;
+      font-size: clamp(1.6rem, 3vw, 2.3rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
     }
 
-    .page-shell {
-      width: min(100%, calc(var(--container) + 48px));
-      margin: 0 auto;
-      padding: clamp(24px, 4vw, 40px) 24px clamp(36px, 6vw, 72px);
+    .synthia-sovereign .ss-hero-copy {
+      max-width: 64ch;
+      font-size: clamp(1rem, 1.6vw, 1.16rem);
+      color: var(--ss-muted);
+      margin-bottom: 1.6rem;
     }
 
-    .rise {
-      opacity: 0;
-      animation: riseIn 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      animation-delay: var(--delay, 0s);
+    .synthia-sovereign .ss-core-note {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem 1rem;
+      align-items: center;
+      padding: 1rem 1.1rem;
+      margin-bottom: 2rem;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(228, 231, 236, 0.95);
+      border-radius: 18px;
+      backdrop-filter: blur(8px);
+      box-shadow: var(--ss-shadow);
     }
 
-    .hero {
-      padding-top: clamp(16px, 3vw, 36px);
+    .synthia-sovereign .ss-core-note strong {
+      font-size: 0.98rem;
     }
 
-    .hero-shell {
-      position: relative;
-      border-radius: calc(var(--radius-xl) + 6px);
-      padding: clamp(28px, 5vw, 54px);
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015)),
-        rgba(10, 13, 19, 0.55);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+    .synthia-sovereign .ss-core-note span {
+      color: var(--ss-muted);
+      font-size: 0.98rem;
     }
 
-    .hero-shell::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(90deg, rgba(143, 121, 255, 0.12), transparent 26%),
-        radial-gradient(circle at 90% 6%, rgba(78, 165, 255, 0.12), transparent 26%);
-      pointer-events: none;
-    }
-
-    .hero-shell::after {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.28), rgba(255,255,255,0.06), transparent 78%);
-      pointer-events: none;
-    }
-
-    .brand-pill {
+    .synthia-sovereign code,
+    .synthia-sovereign .ss-code {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
+      padding: 0.5rem 0.8rem;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: var(--soft);
-      font-size: 0.92rem;
-      letter-spacing: 0.01em;
-      position: relative;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    }
-
-    .brand-pill::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, var(--prompt), var(--ground));
-      box-shadow: 0 0 18px rgba(143, 121, 255, 0.5);
-      animation: pulseGlow 3.5s ease-in-out infinite;
-    }
-
-    .hero-title {
-      margin: 20px 0 0;
-      max-width: 11ch;
-      font-size: clamp(2.8rem, 7vw, 5.4rem);
-      line-height: 0.96;
-      letter-spacing: -0.055em;
+      background: #111827;
+      color: #ffffff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.93rem;
       font-weight: 700;
+      white-space: nowrap;
     }
 
-    .hero-subtitle {
-      margin: 22px 0 0;
-      max-width: 62ch;
-      color: var(--soft);
-      font-size: clamp(1.05rem, 2vw, 1.22rem);
-      line-height: 1.65;
+    .synthia-sovereign .ss-section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 1rem 2rem;
+      margin-bottom: 1.4rem;
     }
 
-    .core-note {
-      margin-top: 28px;
+    .synthia-sovereign .ss-section-head p {
+      margin-bottom: 0;
+      max-width: 60ch;
+      color: var(--ss-muted);
+    }
+
+    .synthia-sovereign .ss-controls {
+      display: flex;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+
+    .synthia-sovereign .ss-button {
+      appearance: none;
+      border: 1px solid var(--ss-line);
+      background: rgba(255, 255, 255, 0.86);
+      color: var(--ss-text);
+      border-radius: 999px;
+      padding: 0.72rem 1rem;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+      box-shadow: var(--ss-shadow);
+    }
+
+    .synthia-sovereign .ss-button:hover,
+    .synthia-sovereign .ss-button:focus-visible {
+      border-color: rgba(79, 70, 229, 0.35);
+      background: #ffffff;
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .synthia-sovereign .ss-card-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-      position: relative;
-      padding: 20px 22px;
-      border-radius: var(--radius-lg);
-      background: rgba(255, 255, 255, 0.045);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      gap: 1rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .core-note::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(143, 121, 255, 0.75), rgba(54, 214, 163, 0.4), transparent 80%);
-      pointer-events: none;
-    }
-
-    .core-note p {
-      margin: 0;
-      color: var(--soft);
-      font-size: 1rem;
-      line-height: 1.6;
-    }
-
-    .quick-grid {
-      margin-top: 26px;
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .quick-card,
-    .piece-card,
-    .command-card,
-    .footer-note {
-      position: relative;
-      border-radius: var(--radius-lg);
-      background: var(--panel);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
+    .synthia-sovereign .ss-card {
+      background: var(--ss-surface);
+      border: 1px solid var(--ss-line);
+      border-radius: var(--ss-radius);
+      box-shadow: var(--ss-shadow);
       overflow: hidden;
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      transition: transform 240ms ease, border-color 240ms ease, box-shadow 240ms ease, background 240ms ease;
     }
 
-    .quick-card::before,
-    .piece-card::before,
-    .command-card::before,
-    .footer-note::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.24), rgba(255,255,255,0.06), transparent 70%);
-      pointer-events: none;
-    }
-
-    .quick-card::after,
-    .piece-card::after,
-    .command-card::after,
-    .footer-note::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.16), rgba(var(--accent-rgb), 0.06) 18%, transparent 58%);
-      opacity: 0.95;
-      pointer-events: none;
-    }
-
-    .quick-card:hover,
-    .piece-card:hover,
-    .command-card:hover,
-    .footer-note:hover {
-      transform: translateY(-2px);
-      border-color: var(--line-strong);
-      box-shadow: var(--shadow-strong);
-    }
-
-    .quick-card {
-      --accent-rgb: 143, 121, 255;
-      padding: 18px 18px 20px;
-      min-height: 160px;
+    .synthia-sovereign .ss-card summary {
+      list-style: none;
       display: flex;
-      flex-direction: column;
       justify-content: space-between;
-      gap: 14px;
+      align-items: start;
+      gap: 1rem;
+      padding: 1.3rem;
+      cursor: pointer;
     }
 
-    .quick-card > * {
-      position: relative;
-      z-index: 1;
+    .synthia-sovereign .ss-card summary::-webkit-details-marker {
+      display: none;
     }
 
-    .quick-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-    }
-
-    .quick-number {
+    .synthia-sovereign .ss-card summary::after {
+      content: "+";
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 34px;
-      height: 34px;
-      padding: 0 10px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: var(--text);
-      font-size: 0.92rem;
-      font-weight: 700;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    }
-
-    .quick-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      position: relative;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-
-    .quick-icon::before,
-    .quick-icon::after {
-      content: "";
-      position: absolute;
+      min-width: 2.25rem;
+      min-height: 2.25rem;
       border-radius: 999px;
-    }
-
-    .quick-icon::before {
-      width: 18px;
-      height: 18px;
-      inset: 12px;
-      margin: auto;
-      background: rgba(var(--accent-rgb), 0.92);
-      box-shadow: 0 0 24px rgba(var(--accent-rgb), 0.45);
-    }
-
-    .quick-icon::after {
-      width: 30px;
-      height: 30px;
-      inset: 5px;
-      margin: auto;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      opacity: 0.8;
-    }
-
-    .quick-title {
-      margin: 0;
-      font-size: 1.08rem;
-      letter-spacing: -0.03em;
-      font-weight: 650;
-    }
-
-    .quick-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 0.96rem;
-    }
-
-    .section {
-      margin-top: clamp(30px, 6vw, 56px);
-    }
-
-    .section-header {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
-    .section-copy h2 {
-      margin: 0;
-      font-size: clamp(1.8rem, 3vw, 2.5rem);
-      line-height: 1.06;
-      letter-spacing: -0.04em;
-      font-weight: 680;
-    }
-
-    .section-copy p {
-      margin: 10px 0 0;
-      color: var(--muted);
-      font-size: 1rem;
-      line-height: 1.6;
-    }
-
-    .section-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .action-button {
-      appearance: none;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text);
-      border-radius: 999px;
-      padding: 11px 16px;
-      font: inherit;
+      border: 1px solid var(--ss-line);
+      color: var(--ss-accent);
+      font-size: 1.35rem;
+      font-weight: 500;
       line-height: 1;
-      cursor: pointer;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      transition: transform 200ms ease, border-color 200ms ease, background 200ms ease, box-shadow 200ms ease;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-
-    .action-button:hover {
-      transform: translateY(-1px);
-      border-color: rgba(255, 255, 255, 0.18);
-      background: rgba(255, 255, 255, 0.07);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
-    }
-
-    .action-button:focus-visible,
-    summary:focus-visible,
-    details:focus-within,
-    .action-button:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 3px var(--focus);
-    }
-
-    .piece-stack {
-      display: grid;
-      gap: 16px;
-    }
-
-    details {
-      width: 100%;
-    }
-
-    summary {
-      list-style: none;
-      cursor: pointer;
-      display: block;
-      outline: none;
-      position: relative;
-      z-index: 1;
-    }
-
-    summary::-webkit-details-marker { display: none; }
-
-    .piece-summary {
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      gap: 18px;
-      align-items: start;
-      padding: 22px 24px;
-    }
-
-    .icon-wrap {
-      width: 44px;
-      height: 44px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      position: relative;
+      background: #ffffff;
       flex-shrink: 0;
-      overflow: hidden;
     }
 
-    .icon-wrap::before,
-    .icon-wrap::after {
-      content: "";
-      position: absolute;
-      inset: auto;
-      border-radius: 999px;
+    .synthia-sovereign .ss-card[open] summary::after {
+      content: "−";
     }
 
-    .icon-wrap::before {
-      width: 18px;
-      height: 18px;
-      top: 13px;
-      left: 13px;
-      background: rgba(var(--accent-rgb), 0.94);
-      box-shadow: 0 0 24px rgba(var(--accent-rgb), 0.44);
+    .synthia-sovereign .ss-card summary:focus-visible {
+      outline: 3px solid rgba(79, 70, 229, 0.18);
+      outline-offset: -3px;
     }
 
-    .icon-wrap::after {
-      width: 30px;
-      height: 30px;
-      top: 6px;
-      left: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    .piece-copy {
+    .synthia-sovereign .ss-summary-main {
+      display: flex;
+      gap: 1rem;
+      align-items: start;
       min-width: 0;
     }
 
-    .piece-label,
-    .info-label,
-    .command-label,
-    .mode-heading {
-      margin: 0;
-      color: var(--soft);
-      font-size: 0.88rem;
-      letter-spacing: 0.01em;
-      line-height: 1.3;
-    }
-
-    .piece-title,
-    .command-title {
-      margin: 6px 0 0;
-      font-size: clamp(1.28rem, 2.2vw, 1.6rem);
-      line-height: 1.08;
-      letter-spacing: -0.035em;
-      font-weight: 670;
-    }
-
-    .piece-blurb,
-    .command-description {
-      margin: 10px 0 0;
-      color: var(--muted);
-      line-height: 1.62;
-      font-size: 1rem;
-      max-width: 66ch;
-    }
-
-    .chevron {
-      width: 32px;
-      height: 32px;
+    .synthia-sovereign .ss-step {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      color: var(--soft);
-      transition: transform 260ms ease, border-color 260ms ease, background 260ms ease;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 16px;
+      background: var(--ss-accent-soft);
+      color: var(--ss-accent);
+      font-size: 0.95rem;
+      font-weight: 800;
       flex-shrink: 0;
     }
 
-    .chevron svg {
-      width: 16px;
-      height: 16px;
-      display: block;
-      transition: transform 260ms ease;
+    .synthia-sovereign .ss-step--command {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #92400e;
+      box-shadow: inset 0 0 0 1px rgba(146, 64, 14, 0.08);
     }
 
-    .piece-card[open] .chevron {
-      border-color: rgba(var(--accent-rgb), 0.45);
-      background: rgba(var(--accent-rgb), 0.1);
+    .synthia-sovereign .ss-card-label {
+      margin: 0 0 0.28rem;
+      color: var(--ss-accent);
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
     }
 
-    .piece-card[open] .chevron svg {
-      transform: rotate(180deg);
-    }
-
-    .piece-card[open] {
-      border-color: rgba(var(--accent-rgb), 0.28);
-      background: var(--panel-strong);
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.48);
-    }
-
-    .piece-body {
-      display: grid;
-      grid-template-rows: 0fr;
-      transition: grid-template-rows 320ms ease;
-      position: relative;
-      z-index: 1;
-    }
-
-    .piece-card[open] .piece-body {
-      grid-template-rows: 1fr;
-    }
-
-    .piece-body-inner {
-      overflow: hidden;
-    }
-
-    .piece-body-content {
-      padding: 0 24px 24px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .info-grid,
-    .command-grid,
-    .mode-grid {
-      display: grid;
-      gap: 14px;
-    }
-
-    .info-grid {
-      margin-top: 20px;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .command-grid {
-      margin-top: 20px;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .info-block,
-    .mode-card {
-      position: relative;
-      padding: 16px 16px 18px;
-      border-radius: var(--radius-md);
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      overflow: hidden;
-      min-height: 100%;
-    }
-
-    .info-block::before,
-    .mode-card::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.14), transparent 75%);
-      pointer-events: none;
-    }
-
-    .info-label {
-      margin-bottom: 10px;
-      color: var(--soft);
-    }
-
-    .info-block p,
-    .mode-card p {
-      margin: 0;
-      color: var(--text);
-      line-height: 1.6;
-      font-size: 0.98rem;
-    }
-
-    code {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      max-width: 100%;
-      padding: 10px 14px;
-      border-radius: 14px;
-      background: rgba(8, 11, 17, 0.88);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #ffffff;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 0.96rem;
-      font-weight: 700;
-      letter-spacing: 0.01em;
-      line-height: 1.45;
-      white-space: nowrap;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 6px 18px rgba(0, 0, 0, 0.22);
-    }
-
-    .command-card code {
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.05),
-        0 6px 18px rgba(0, 0, 0, 0.22);
-    }
-
-    .command-code-maximize {
-      border-color: rgba(143, 121, 255, 0.3);
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.05),
-        0 6px 18px rgba(0, 0, 0, 0.22),
-        0 0 0 1px rgba(143, 121, 255, 0.1);
-    }
-
-    .command-code-optimize {
-      border-color: rgba(78, 165, 255, 0.32);
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.05),
-        0 6px 18px rgba(0, 0, 0, 0.22),
-        0 0 0 1px rgba(78, 165, 255, 0.1);
-    }
-
-    .mode-shell {
-      margin-top: 14px;
-      display: grid;
-      gap: 14px;
-    }
-
-    .mode-heading {
-      color: var(--soft);
-    }
-
-    .mode-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .mode-card h4 {
-      margin: 0 0 8px;
-      font-size: 1rem;
-      line-height: 1.2;
+    .synthia-sovereign .ss-card summary h3 {
+      margin: 0 0 0.35rem;
+      font-size: 1.32rem;
+      line-height: 1.1;
       letter-spacing: -0.02em;
     }
 
-    .commands {
+    .synthia-sovereign .ss-card-blurb {
+      margin: 0;
+      color: var(--ss-muted);
+      max-width: 46ch;
+    }
+
+    .synthia-sovereign .ss-card-body {
+      padding: 1.3rem;
+      border-top: 1px solid var(--ss-line);
+    }
+
+    .synthia-sovereign .ss-mini-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
+      gap: 0.9rem;
     }
 
-    .command-card {
-      --accent-rgb: 143, 121, 255;
-      padding: 22px 24px 24px;
+    .synthia-sovereign .ss-mini {
+      padding: 1rem;
+      background: var(--ss-surface-soft);
+      border: 1px solid #e7eaf5;
+      border-radius: 18px;
     }
 
-    .command-card > * {
-      position: relative;
-      z-index: 1;
+    .synthia-sovereign .ss-mini--wide {
+      grid-column: 1 / -1;
     }
 
-    .command-card[data-gradient="shared"]::after {
-      background:
-        linear-gradient(90deg, rgba(var(--global-a-rgb), 0.16), rgba(var(--global-a-rgb), 0.06) 18%, transparent 40%),
-        radial-gradient(circle at 90% 12%, rgba(var(--global-b-rgb), 0.14), transparent 34%);
+    .synthia-sovereign .ss-mini-label {
+      margin: 0 0 0.45rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ss-muted);
     }
 
-    .command-card[data-gradient="shared"] {
-      border-color: rgba(255, 255, 255, 0.11);
-    }
-
-    .footer-note {
-      --accent-rgb: 143, 121, 255;
-      margin-top: 18px;
-      padding: 18px 20px;
-      text-align: center;
-      color: var(--soft);
+    .synthia-sovereign .ss-mini p {
+      margin: 0;
       font-size: 0.98rem;
-      line-height: 1.55;
     }
 
-    .quick-card[data-accent="prompt"],
-    .piece-card[data-accent="prompt"] { --accent-rgb: var(--prompt-rgb); }
-
-    .quick-card[data-accent="ground"],
-    .piece-card[data-accent="ground"] { --accent-rgb: var(--ground-rgb); }
-
-    .quick-card[data-accent="council"],
-    .piece-card[data-accent="council"] { --accent-rgb: var(--council-rgb); }
-
-    .quick-card[data-accent="compute"],
-    .piece-card[data-accent="compute"] { --accent-rgb: var(--compute-rgb); }
-
-    .quick-card[data-accent="mode"],
-    .piece-card[data-accent="mode"] { --accent-rgb: var(--mode-rgb); }
-
-    .piece-card[data-accent="prompt"] { --focus: rgba(143, 121, 255, 0.36); }
-    .piece-card[data-accent="ground"] { --focus: rgba(78, 165, 255, 0.32); }
-    .piece-card[data-accent="council"] { --focus: rgba(54, 214, 163, 0.32); }
-    .piece-card[data-accent="compute"] { --focus: rgba(255, 178, 93, 0.32); }
-    .piece-card[data-accent="mode"] { --focus: rgba(255, 127, 150, 0.32); }
-
-    @media (max-width: 1080px) {
-      .quick-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .info-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .command-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+    .synthia-sovereign .ss-mode-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
     }
 
-    @media (max-width: 820px) {
-      .page-shell {
-        padding-inline: 18px;
+    .synthia-sovereign .ss-mode-item {
+      padding: 0.9rem;
+      background: #ffffff;
+      border: 1px solid var(--ss-line);
+      border-radius: 16px;
+    }
+
+    .synthia-sovereign .ss-mode-item strong {
+      display: block;
+      margin-bottom: 0.18rem;
+      font-size: 0.98rem;
+    }
+
+    .synthia-sovereign .ss-mode-item span {
+      color: var(--ss-muted);
+      font-size: 0.94rem;
+    }
+
+    .synthia-sovereign .ss-footer-note {
+      margin-top: 1rem;
+      color: var(--ss-muted);
+      font-size: 0.97rem;
+    }
+
+    .synthia-sovereign .ss-subtle {
+      color: var(--ss-muted);
+    }
+
+    @media (max-width: 980px) {
+      .synthia-sovereign .ss-card-grid {
+        grid-template-columns: 1fr;
       }
 
-      .section-header {
+      .synthia-sovereign .ss-section-head {
+        align-items: start;
         flex-direction: column;
-        align-items: stretch;
-      }
-
-      .commands {
-        grid-template-columns: 1fr;
-      }
-
-      .quick-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
-    @media (max-width: 640px) {
-      .hero-shell {
-        padding: 24px 20px;
-      }
-
-      .piece-summary {
-        grid-template-columns: auto minmax(0, 1fr);
-      }
-
-      .chevron {
-        grid-column: 2;
-        justify-self: end;
-      }
-
-      .piece-body-content {
-        padding: 0 20px 20px;
-      }
-
-      .info-grid,
-      .command-grid,
-      .mode-grid,
-      .quick-grid {
+    @media (max-width: 720px) {
+      .synthia-sovereign .ss-mini-grid,
+      .synthia-sovereign .ss-mode-grid {
         grid-template-columns: 1fr;
       }
+    }
 
-      .action-button {
-        flex: 1 1 auto;
-        justify-content: center;
+    @media (max-width: 560px) {
+      .synthia-sovereign .ss-wrap {
+        width: min(1120px, calc(100% - 1rem));
       }
 
-      .quick-card,
-      .command-card {
-        padding-inline: 18px;
+      .synthia-sovereign .ss-card summary,
+      .synthia-sovereign .ss-card-body {
+        padding: 1rem;
       }
 
-      code {
-        white-space: normal;
+      .synthia-sovereign .ss-summary-main {
+        gap: 0.85rem;
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      *, *::before, *::after {
-        animation: none !important;
-        transition: none !important;
+      html {
+        scroll-behavior: auto;
       }
-      .rise { opacity: 1; }
+
+      .synthia-sovereign .ss-button {
+        transition: none;
+      }
     }
   </style>
 </head>
 <body>
-  <main>
-    <div class="page-shell">
-      <section class="hero rise" style="--delay: 0s;" aria-labelledby="page-title">
-        <div class="hero-shell">
-          <div class="brand-pill">Synthia • Sovereign Search</div>
-          <h1 class="hero-title" id="page-title">How Synthia's Sovereign Search works in 5 simple pieces</h1>
-          <p class="hero-subtitle">Ask one question. Turn on any piece you want. Or use a Global Command and let Synthia choose the setup. You do not need to learn anything technical.</p>
-          <div class="core-note">
-            <p>The 5 pieces below are the core system.</p>
-            <p>Global Commands are the shortcuts: maximize runs everything at maximum, and optimize makes a smart selection based on context.</p>
-          </div>
-          <div class="quick-grid" aria-label="Quick scan">
-            <article class="quick-card rise" data-accent="prompt" style="--delay: 0.06s;">
-              <div class="quick-top">
-                <span class="quick-number">1</span>
-                <span class="quick-icon" aria-hidden="true"></span>
-              </div>
-              <div>
-                <h3 class="quick-title">Prompt</h3>
-                <p>Sharpen the question before the real answer begins.</p>
-              </div>
-            </article>
-            <article class="quick-card rise" data-accent="ground" style="--delay: 0.12s;">
-              <div class="quick-top">
-                <span class="quick-number">2</span>
-                <span class="quick-icon" aria-hidden="true"></span>
-              </div>
-              <div>
-                <h3 class="quick-title">Ground</h3>
-                <p>Anchor the answer in outside facts, sources, and reality.</p>
-              </div>
-            </article>
-            <article class="quick-card rise" data-accent="council" style="--delay: 0.18s;">
-              <div class="quick-top">
-                <span class="quick-number">3</span>
-                <span class="quick-icon" aria-hidden="true"></span>
-              </div>
-              <div>
-                <h3 class="quick-title">Council</h3>
-                <p>Bring together multiple model perspectives in one result.</p>
-              </div>
-            </article>
-            <article class="quick-card rise" data-accent="compute" style="--delay: 0.24s;">
-              <div class="quick-top">
-                <span class="quick-number">4</span>
-                <span class="quick-icon" aria-hidden="true"></span>
-              </div>
-              <div>
-                <h3 class="quick-title">Compute</h3>
-                <p>Add more thinking power for harder, messier questions.</p>
-              </div>
-            </article>
-            <article class="quick-card rise" data-accent="mode" style="--delay: 0.3s;">
-              <div class="quick-top">
-                <span class="quick-number">5</span>
-                <span class="quick-icon" aria-hidden="true"></span>
-              </div>
-              <div>
-                <h3 class="quick-title">Mode</h3>
-                <p>Choose the lens so the answer feels right for the job.</p>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
+  <!-- Standalone, CMS-friendly page. To embed inside an existing site, copy the <main> block and the scoped styles above. -->
+  <main class="synthia-sovereign" id="top">
+    <section class="ss-section ss-hero">
+      <div class="ss-wrap">
+        <p class="ss-eyebrow">Synthia • Sovereign Search</p>
+        <h1>How Synthia's Sovereign Search works in 5 simple pieces</h1>
+        <p class="ss-hero-copy">
+          Start with 2 simple shortcuts at the top if you want Synthia to choose the setup for you.
+          Or scroll down into the 5 core pieces when you want more granular control.
+        </p>
 
-      <section class="section rise" style="--delay: 0.12s;" aria-labelledby="core-pieces-title">
-        <div class="section-header">
-          <div class="section-copy">
-            <h2 id="core-pieces-title">The 5 core pieces</h2>
-            <p>Fast to scan. Easy to understand when opened.</p>
+        <div class="ss-core-note" aria-label="Core system note">
+          <strong>Start here — these two commands do it all.</strong>
+          <span>
+            Or scroll down to pick individual pieces. <code>maximize</code> runs the full system,
+            and <code>optimize</code> picks the smartest mix for the question.
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <section class="ss-section">
+      <div class="ss-wrap">
+        <div class="ss-section-head">
+          <div>
+            <p class="ss-kicker">Global Commands</p>
+            <h2>Simple shortcuts when you do not want to choose the setup yourself.</h2>
+            <p>Open a card to see exactly what to say, when to use it, and what Synthia will do.</p>
           </div>
-          <div class="section-actions" aria-label="Accordion controls">
-            <button class="action-button" id="expand-all" type="button">Expand all</button>
-            <button class="action-button" id="collapse-all" type="button">Collapse all</button>
+
+          <div class="ss-controls" aria-label="Accordion controls">
+            <button class="ss-button" type="button" data-action="expand">Expand all</button>
+            <button class="ss-button" type="button" data-action="collapse">Collapse all</button>
           </div>
         </div>
 
-        <div class="piece-stack">
-          <details class="piece-card rise" data-accent="prompt" id="piece-prompt" style="--delay: 0.16s;">
-            <summary aria-expanded="false">
-              <div class="piece-summary">
-                <span class="icon-wrap" aria-hidden="true"></span>
-                <div class="piece-copy">
-                  <p class="piece-label">Sharpen the question</p>
-                  <h3 class="piece-title">Prompt</h3>
-                  <p class="piece-blurb">Turns a rough question into a clear one before the real answer begins.</p>
+        <div class="ss-card-grid">
+          <details class="ss-card" id="maximize">
+            <summary>
+              <div class="ss-summary-main">
+                <span class="ss-step ss-step--command">♾️</span>
+                <div>
+                  <p class="ss-card-label">Global Command</p>
+                  <h3>Maximize</h3>
+                  <p class="ss-card-blurb">Run all 5 core pieces at maximum settings.</p>
                 </div>
-                <span class="chevron" aria-hidden="true">
-                  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </span>
               </div>
             </summary>
-            <div class="piece-body">
-              <div class="piece-body-inner">
-                <div class="piece-body-content">
-                  <div class="info-grid">
-                    <div class="info-block">
-                      <p class="info-label">Just say</p>
-                      <code>max prompt this</code>
-                    </div>
-                    <div class="info-block">
-                      <p class="info-label">What it does</p>
-                      <p>Adds a few short follow-up questions so the final answer can be more exact.</p>
-                    </div>
-                    <div class="info-block">
-                      <p class="info-label">Why it helps</p>
-                      <p>Clear questions lead to clearer answers. It cuts down on guesswork.</p>
-                    </div>
-                    <div class="info-block">
-                      <p class="info-label">What happens</p>
-                      <p>You answer a few quick prompts, then Synthia comes back with a sharper response.</p>
-                    </div>
-                  </div>
+            <div class="ss-card-body">
+              <div class="ss-mini-grid">
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Just say</p>
+                  <p><span class="ss-code">maximize</span></p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Best for</p>
+                  <p>Questions that matter enough to justify the fullest possible pass.</p>
+                </div>
+                <div class="ss-mini ss-mini--wide">
+                  <p class="ss-mini-label">What happens</p>
+                  <p>Synthia turns on the full system and pushes every piece to its strongest setting.</p>
                 </div>
               </div>
             </div>
           </details>
 
-          <details class="piece-card rise" data-accent="ground" id="piece-ground" style="--delay: 0.22s;">
-            <summary aria-expanded="false">
-              <div class="piece-summary">
-                <span class="icon-wrap" aria-hidden="true"></span>
-                <div class="piece-copy">
-                  <p class="piece-label">Anchor in external reality</p>
-                  <h3 class="piece-title">Ground</h3>
-                  <p class="piece-blurb">Checks outside facts, sources, or examples before answering.</p>
+          <details class="ss-card" id="optimize">
+            <summary>
+              <div class="ss-summary-main">
+                <span class="ss-step ss-step--command">🎯</span>
+                <div>
+                  <p class="ss-card-label">Global Command</p>
+                  <h3>Optimize</h3>
+                  <p class="ss-card-blurb">Make a smart selection based on context.</p>
                 </div>
-                <span class="chevron" aria-hidden="true">
-                  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </span>
               </div>
             </summary>
-            <div class="piece-body">
-              <div class="piece-body-inner">
-                <div class="piece-body-content">
-                  <div class="info-grid">
-                    <div class="info-block">
-                      <p class="info-label">Just say</p>
-                      <code>ground this</code>
-                    </div>
-                    <div class="info-block">
-                      <p class="info-label">What it does</p>
-                      <p>Looks outward first so the answer starts from real information, not just a best guess.</p>
-                    </div>
-                    <div class="info-block">
-                      <p class="info-label">Why it helps</p>
-                      <p>It makes the answer feel more trustworthy, concrete, and tied to what is actually out there.</p>
-                    </div>
-                    <div class="info-block">
-                      <p class="info-label">What happens</p>
-                      <p>Synthia checks relevant outside material, then answers from a more grounded starting point.</p>
-                    </div>
-                  </div>
+            <div class="ss-card-body">
+              <div class="ss-mini-grid">
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Just say</p>
+                  <p><span class="ss-code">optimize</span></p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Best for</p>
+                  <p>When you want a strong answer without deciding which pieces to turn on.</p>
+                </div>
+                <div class="ss-mini ss-mini--wide">
+                  <p class="ss-mini-label">What happens</p>
+                  <p>Synthia looks at the question, picks the smartest mix, and uses the amount of each piece that fits the job.</p>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <p class="ss-footer-note">
+          These two commands are the fastest path. The 5 core pieces below let you steer more precisely.
+        </p>
+      </div>
+    </section>
+
+    <section class="ss-section">
+      <div class="ss-wrap">
+        <div class="ss-section-head">
+          <div>
+            <p class="ss-kicker">The 5 core pieces</p>
+            <h2>Fast to scan. Easy to understand when opened.</h2>
+            <p>Each card uses the same simple pattern: what to say, what it does, why it helps, and what happens.</p>
+          </div>
+        </div>
+
+        <div class="ss-card-grid">
+          <details class="ss-card" id="max-prompt">
+            <summary>
+              <div class="ss-summary-main">
+                <span class="ss-step">1</span>
+                <div>
+                  <p class="ss-card-label">Sharpen the question</p>
+                  <h3>Prompt</h3>
+                  <p class="ss-card-blurb">Turns a rough question into a clear one before the real answer begins.</p>
+                </div>
+              </div>
+            </summary>
+            <div class="ss-card-body">
+              <div class="ss-mini-grid">
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Just say</p>
+                  <p><span class="ss-code">max prompt this</span></p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What it does</p>
+                  <p>Adds a few short follow-up questions so the final answer can be more exact.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Why it helps</p>
+                  <p>Clear questions lead to clearer answers. It cuts down on guesswork.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What happens</p>
+                  <p>You answer a few quick prompts, then Synthia comes back with a sharper response.</p>
                 </div>
               </div>
             </div>
           </details>
 
-          <details class="piece-card rise" data-accent="council" id="piece-council" style="--delay: 0.28s;">
-            <summary aria-expanded="false">
-              <div class="piece-summary">
-                <span class="icon-wrap" aria-hidden="true"></span>
-                <div class="piece-copy">
-                  <p class="piece-label">Integrate multiple model perspectives</p>
-                  <h3 class="piece-title">Council</h3>
-                  <p class="piece-blurb">More than one model looks at the question, then Synthia combines the strongest ideas.</p>
+          <details class="ss-card" id="ground-this">
+            <summary>
+              <div class="ss-summary-main">
+                <span class="ss-step">2</span>
+                <div>
+                  <p class="ss-card-label">Anchor in external reality</p>
+                  <h3>Ground</h3>
+                  <p class="ss-card-blurb">Checks outside facts, sources, or examples before answering.</p>
                 </div>
-                <span class="chevron" aria-hidden="true">
-                  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </span>
               </div>
             </summary>
-            <div class="piece-body">
-              <div class="piece-body-inner">
-                <div class="piece-body-content">
-                  <div class="info-grid">
-                    <div class="info-block">
-                      <p class="info-label">Just say</p>
-                      <code>council this</code>
-                    </div>
-                    <div class="info-block">
-                      <p class="info-label">What it does</p>
-                      <p>Gets separate takes from multiple models instead of relying on one first answer.</p>
-                    </div>
-                    <div class="info-block">
-                      <p class="info-label">Why it helps</p>
-                      <p>Different models notice different strengths, gaps, and possibilities.</p>
-                    </div>
-                    <div class="info-block">
-                      <p class="info-label">What happens</p>
-                      <p>Synthia compares the different outputs and gives you one stronger, integrated result.</p>
-                    </div>
-                  </div>
+            <div class="ss-card-body">
+              <div class="ss-mini-grid">
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Just say</p>
+                  <p><span class="ss-code">ground this</span></p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What it does</p>
+                  <p>Looks outward first so the answer starts from real information, not just a best guess.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Why it helps</p>
+                  <p>It makes the answer feel more trustworthy, concrete, and tied to what is actually out there.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What happens</p>
+                  <p>Synthia checks relevant outside material, then answers from a more grounded starting point.</p>
                 </div>
               </div>
             </div>
           </details>
 
-          <details class="piece-card rise" data-accent="compute" id="piece-compute" style="--delay: 0.34s;">
-            <summary aria-expanded="false">
-              <div class="piece-summary">
-                <span class="icon-wrap" aria-hidden="true"></span>
-                <div class="piece-copy">
-                  <p class="piece-label">Address complexity</p>
-                  <h3 class="piece-title">Compute</h3>
-                  <p class="piece-blurb">Gives harder problems more time, more reasoning, and more care.</p>
+          <details class="ss-card" id="council">
+            <summary>
+              <div class="ss-summary-main">
+                <span class="ss-step">3</span>
+                <div>
+                  <p class="ss-card-label">Integrate multiple model perspectives</p>
+                  <h3>Council</h3>
+                  <p class="ss-card-blurb">More than one model looks at the question, then Synthia combines the strongest ideas.</p>
                 </div>
-                <span class="chevron" aria-hidden="true">
-                  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </span>
               </div>
             </summary>
-            <div class="piece-body">
-              <div class="piece-body-inner">
-                <div class="piece-body-content">
-                  <div class="info-grid">
-                    <div class="info-block">
-                      <p class="info-label">Just say</p>
-                      <code>compute this</code>
-                    </div>
-                    <div class="info-block">
-                      <p class="info-label">What it does</p>
-                      <p>Uses a deeper reasoning path for messy, important, or high-stakes questions.</p>
-                    </div>
-                    <div class="info-block">
-                      <p class="info-label">Why it helps</p>
-                      <p>Complex problems usually need slower, more careful thinking than a quick first pass.</p>
-                    </div>
-                    <div class="info-block">
-                      <p class="info-label">What happens</p>
-                      <p>Synthia spends more effort on the problem and returns a more worked-through answer.</p>
-                    </div>
-                  </div>
+            <div class="ss-card-body">
+              <div class="ss-mini-grid">
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Just say</p>
+                  <p><span class="ss-code">council this</span></p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What it does</p>
+                  <p>Gets separate takes from multiple models instead of relying on one first answer.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Why it helps</p>
+                  <p>Different models notice different strengths, gaps, and possibilities.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What happens</p>
+                  <p>Synthia compares the different outputs and gives you one stronger, integrated result.</p>
                 </div>
               </div>
             </div>
           </details>
 
-          <details class="piece-card rise" data-accent="mode" id="piece-mode" style="--delay: 0.4s;">
-            <summary aria-expanded="false">
-              <div class="piece-summary">
-                <span class="icon-wrap" aria-hidden="true"></span>
-                <div class="piece-copy">
-                  <p class="piece-label">Choose the user's lens</p>
-                  <h3 class="piece-title">Mode</h3>
-                  <p class="piece-blurb">Keeps the same question, but changes the style and lens of the answer.</p>
+          <details class="ss-card" id="compute-this">
+            <summary>
+              <div class="ss-summary-main">
+                <span class="ss-step">4</span>
+                <div>
+                  <p class="ss-card-label">Address complexity</p>
+                  <h3>Compute</h3>
+                  <p class="ss-card-blurb">Gives harder problems more time, more reasoning, and more care.</p>
                 </div>
-                <span class="chevron" aria-hidden="true">
-                  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </span>
               </div>
             </summary>
-            <div class="piece-body">
-              <div class="piece-body-inner">
-                <div class="piece-body-content">
-                  <div class="info-grid">
-                    <div class="info-block">
-                      <p class="info-label">Just say</p>
-                      <code>in builder mode</code>
+            <div class="ss-card-body">
+              <div class="ss-mini-grid">
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Just say</p>
+                  <p><span class="ss-code">compute this</span></p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What it does</p>
+                  <p>Uses a deeper reasoning path for messy, important, or high-stakes questions.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Why it helps</p>
+                  <p>Complex problems usually need slower, more careful thinking than a quick first pass.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What happens</p>
+                  <p>Synthia spends more effort on the problem and returns a more worked-through answer.</p>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <details class="ss-card" id="mode">
+            <summary>
+              <div class="ss-summary-main">
+                <span class="ss-step">5</span>
+                <div>
+                  <p class="ss-card-label">Choose the user's lens</p>
+                  <h3>Mode</h3>
+                  <p class="ss-card-blurb">Keeps the same question, but changes the style and lens of the answer.</p>
+                </div>
+              </div>
+            </summary>
+            <div class="ss-card-body">
+              <div class="ss-mini-grid">
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Just say</p>
+                  <p><span class="ss-code">in builder mode</span></p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What it does</p>
+                  <p>Sets the lens for the full response without changing the question itself.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">Why it helps</p>
+                  <p>The best answer depends on the kind of help you want.</p>
+                </div>
+                <div class="ss-mini">
+                  <p class="ss-mini-label">What happens</p>
+                  <p>Synthia carries that lens through the answer from start to finish.</p>
+                </div>
+                <div class="ss-mini ss-mini--wide">
+                  <p class="ss-mini-label">Common modes</p>
+                  <div class="ss-mode-grid" aria-label="Common modes">
+                    <div class="ss-mode-item">
+                      <strong>Builder</strong>
+                      <span>Practical and step by step.</span>
                     </div>
-                    <div class="info-block">
-                      <p class="info-label">What it does</p>
-                      <p>Sets the lens for the full response without changing the question itself.</p>
+                    <div class="ss-mode-item">
+                      <strong>Wisdom</strong>
+                      <span>Reflective and values-aware.</span>
                     </div>
-                    <div class="info-block">
-                      <p class="info-label">Why it helps</p>
-                      <p>The best answer depends on the kind of help you want.</p>
+                    <div class="ss-mode-item">
+                      <strong>Tension</strong>
+                      <span>Holds both sides honestly.</span>
                     </div>
-                    <div class="info-block">
-                      <p class="info-label">What happens</p>
-                      <p>Synthia carries that lens through the answer from start to finish.</p>
-                    </div>
-                  </div>
-                  <div class="mode-shell">
-                    <p class="mode-heading">Common modes:</p>
-                    <div class="mode-grid">
-                      <div class="mode-card">
-                        <h4>Builder</h4>
-                        <p>Practical and step by step.</p>
-                      </div>
-                      <div class="mode-card">
-                        <h4>Wisdom</h4>
-                        <p>Reflective and values-aware.</p>
-                      </div>
-                      <div class="mode-card">
-                        <h4>Tension</h4>
-                        <p>Holds both sides honestly.</p>
-                      </div>
-                      <div class="mode-card">
-                        <h4>Persuasion</h4>
-                        <p>Focused on buy-in and influence.</p>
-                      </div>
+                    <div class="ss-mode-item">
+                      <strong>Persuasion</strong>
+                      <span>Focused on buy-in and influence.</span>
                     </div>
                   </div>
                 </div>
@@ -1182,95 +697,34 @@
             </div>
           </details>
         </div>
-      </section>
-
-      <section class="section rise" style="--delay: 0.46s;" aria-labelledby="global-commands-title">
-        <div class="section-header">
-          <div class="section-copy">
-            <h2 id="global-commands-title">Global Commands</h2>
-            <p>Simple shortcuts for people who do not want to choose the setup.</p>
-          </div>
-        </div>
-
-        <div class="commands">
-          <article class="command-card rise" data-gradient="shared" style="--delay: 0.5s;">
-            <h3 class="command-title">Maximize</h3>
-            <p class="command-description">Run all 5 core pieces at maximum settings.</p>
-            <div class="command-grid">
-              <div class="info-block">
-                <p class="info-label">Just say</p>
-                <code class="command-code-maximize">maximize</code>
-              </div>
-              <div class="info-block">
-                <p class="info-label">Best for</p>
-                <p>Questions that matter enough to justify the fullest possible pass.</p>
-              </div>
-              <div class="info-block">
-                <p class="info-label">What happens</p>
-                <p>Synthia turns on the full system and pushes every piece to its strongest setting.</p>
-              </div>
-            </div>
-          </article>
-
-          <article class="command-card rise" data-gradient="shared" style="--delay: 0.56s;">
-            <h3 class="command-title">Optimize</h3>
-            <p class="command-description">Make a smart selection based on context.</p>
-            <div class="command-grid">
-              <div class="info-block">
-                <p class="info-label">Just say</p>
-                <code class="command-code-optimize">optimize</code>
-              </div>
-              <div class="info-block">
-                <p class="info-label">Best for</p>
-                <p>When you want a strong answer without deciding which pieces to turn on.</p>
-              </div>
-              <div class="info-block">
-                <p class="info-label">What happens</p>
-                <p>Synthia looks at the question, picks the smartest mix, and uses the amount of each piece that fits the job.</p>
-              </div>
-            </div>
-          </article>
-        </div>
-
-        <div class="footer-note rise" style="--delay: 0.62s;">Core pieces do the work. Global Commands choose the setup.</div>
-      </section>
-    </div>
+      </div>
+    </section>
   </main>
 
   <script>
     (function () {
-      const detailsList = Array.from(document.querySelectorAll('.piece-card'));
-      const expandAllButton = document.getElementById('expand-all');
-      const collapseAllButton = document.getElementById('collapse-all');
+      const root = document.querySelector('.synthia-sovereign');
+      if (!root) return;
 
-      function syncExpandedState() {
-        detailsList.forEach((details) => {
-          const summary = details.querySelector('summary');
-          if (summary) {
-            summary.setAttribute('aria-expanded', details.open ? 'true' : 'false');
-          }
+      const cards = Array.from(root.querySelectorAll('.ss-card'));
+      const expandButton = root.querySelector('[data-action="expand"]');
+      const collapseButton = root.querySelector('[data-action="collapse"]');
+
+      if (expandButton) {
+        expandButton.addEventListener('click', function () {
+          cards.forEach(function (card) {
+            card.open = true;
+          });
         });
       }
 
-      expandAllButton.addEventListener('click', function () {
-        detailsList.forEach((details) => {
-          details.open = true;
+      if (collapseButton) {
+        collapseButton.addEventListener('click', function () {
+          cards.forEach(function (card) {
+            card.open = false;
+          });
         });
-        syncExpandedState();
-      });
-
-      collapseAllButton.addEventListener('click', function () {
-        detailsList.forEach((details) => {
-          details.open = false;
-        });
-        syncExpandedState();
-      });
-
-      detailsList.forEach((details) => {
-        details.addEventListener('toggle', syncExpandedState);
-      });
-
-      syncExpandedState();
+      }
     }());
   </script>
 </body>
