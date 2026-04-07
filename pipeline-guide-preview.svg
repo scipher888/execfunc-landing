@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Critique Cascade</title>
+  <desc id="desc">Successive pressure-testing for clearer thinking under uncertainty</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="55%" stop-color="#11162b"/>
+      <stop offset="100%" stop-color="#1a2140"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#7c5cff"/>
+      <stop offset="100%" stop-color="#42d7ff"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="14" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1010" cy="110" r="220" fill="#7c5cff" opacity="0.08"/>
+  <circle cx="170" cy="560" r="280" fill="#42d7ff" opacity="0.06"/>
+
+  <rect x="72" y="72" width="1056" height="486" rx="28" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.10)"/>
+
+  <g filter="url(#glow)">
+    <path d="M170 442 C 260 370, 330 400, 405 336 S 560 250, 642 294 S 793 382, 882 318 S 1002 264, 1044 216"
+          fill="none" stroke="url(#accent)" stroke-width="8" stroke-linecap="round" opacity="0.95"/>
+  </g>
+
+  <g fill="none" stroke="rgba(255,255,255,0.20)" stroke-width="2">
+    <circle cx="214" cy="442" r="14" fill="#0f152b"/>
+    <circle cx="405" cy="336" r="14" fill="#0f152b"/>
+    <circle cx="642" cy="294" r="14" fill="#0f152b"/>
+    <circle cx="882" cy="318" r="14" fill="#0f152b"/>
+    <circle cx="1044" cy="216" r="14" fill="#0f152b"/>
+  </g>
+
+  <text x="108" y="190" fill="#f5f7ff" font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="74" font-weight="700" letter-spacing="-1.6">Critique Cascade</text>
+  <text x="108" y="262" fill="#c9d2f3" font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="31" font-weight="500">Successive pressure-testing for clearer thinking under uncertainty</text>
+  <text x="108" y="504" fill="#9fb0e8" font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="26" font-weight="500">Explore or validity check</text>
+</svg>
