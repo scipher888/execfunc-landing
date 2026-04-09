@@ -880,7 +880,11 @@
         <div class="hero-shell">
           <div class="brand-pill">AI • Critique Cascade</div>
           <h1 class="hero-title" id="page-title">How Critique Cascade works in 5 simple pieces</h1>
-          <p class="hero-subtitle">Critique Cascade is a multi-stage reasoning architecture for pressure-testing questions under uncertainty, not an oracle of truth. It does not guarantee correctness or remove uncertainty. Its goal is not just to produce a more epistemically valid answer, but to hold that answer in active tension with the uncertainty, disagreement, and failure modes that still surround it.</p>
+          <p class="hero-subtitle">Critique Cascade is a multi-stage reasoning architecture for pressure-testing questions under uncertainty. It does not produce correct answers. It produces the strongest currently available answer, held in active tension with the uncertainty, disagreement, and failure modes that still surround it. The user decides what to do with that.</p>
+          <div class="core-note" aria-label="Epistemic responsibility statement">
+            <p>This is not a machine for producing clean certainty. It is a system for surfacing pressure points, contested premises, disagreement, and failure modes before they disappear behind a smoother answer.</p>
+            <p>The handoff matters. The system carries the answer forward under tension, then returns judgment to the user instead of pretending uncertainty has been resolved away.</p>
+          </div>
         </div>
       </section>
 
@@ -965,7 +969,7 @@
                     </div>
                     <div class="info-block">
                       <p class="info-label">What happens</p>
-                      <p>AI automatically selects the processing path based on the kind of question being asked. Depending on the prompt, it may route toward <strong>expansionist exploration</strong>, <strong>epistemic validity checking</strong>, or a combination of both. The user does not need to choose this manually.</p>
+                      <p>AI automatically selects the processing path based on the kind of question being asked. In practice, that routing is partly structured and partly model-supervised: the system has fixed stage and model options, while the preprocessor classifies the question and recommends which path to take.</p>
                     </div>
                   </div>
                 </div>
@@ -1096,15 +1100,15 @@
                     </div>
                     <div class="info-block">
                       <p class="info-label">What it does</p>
-                      <p>Routes the question through the council in one of two ways: <strong>exploration</strong> to widen the space, or <strong>validity checking</strong> to pressure-test truth, assumptions, and confidence.</p>
+                      <p>Routes the question through the council in one of two ways: <strong>exploration</strong> to widen the space, or <strong>validity checking</strong> to pressure-test truth, assumptions, confidence, and possible blind spots in the question itself.</p>
                     </div>
                     <div class="info-block">
                       <p class="info-label">Why it helps</p>
-                      <p>Different models notice different strengths, gaps, assumptions, and failure modes. The goal is not pronouncement, but better calibration.</p>
+                      <p>Different models notice different strengths, gaps, assumptions, and failure modes. The goal is not pronouncement, but better calibration and stronger pressure on the assumptions behind the question. In practice, this often works less like a direct answer improver and more like a blind-spot and assumption-failure finder.</p>
                     </div>
                     <div class="info-block">
                       <p class="info-label">What happens</p>
-                      <p>AI compares the outputs, preserves disagreement when it matters, and returns a result that holds the improved answer in active tension with the uncertainty, disagreement, and failure modes that still surround it.</p>
+                      <p>AI compares the outputs, preserves disagreement when it matters, and returns a result that holds the improved answer in active tension with the uncertainty, disagreement, and failure modes that still surround it, then hands judgment back to the user instead of closing with false certainty.</p>
                     </div>
                   </div>
                 </div>
